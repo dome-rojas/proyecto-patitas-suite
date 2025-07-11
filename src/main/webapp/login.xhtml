@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="primefaces">
+<f:view>
+    <h:head>
+        <title>Inicio de Sesión</title>
+        <meta charset="UTF-8"/>
+        <style>
+            body {
+                margin: 0;
+                font-family: "Segoe UI", sans-serif;
+                background-color: #d6ecc3;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+            }
+            .login-container {
+                background-color: #fff;
+                padding: 40px 30px;
+                border-radius: 24px;
+                box-shadow: 8px 8px 0 #b8d7a4;
+                width: 350px;
+                margin: auto;
+            }
+            .login-title {
+                text-align: center;
+                margin-bottom: 28px;
+                font-size: 24px;
+                font-weight: bold;
+                color: #111;
+                letter-spacing: 1px;
+            }
+            .input-group {
+                display: flex;
+                align-items: center;
+                margin-bottom: 18px;
+            }
+            .input-icon {
+                width: 26px;
+                margin-right: 10px;
+                color: #333;
+            }
+            .custom-input {
+                flex: 1;
+                border: 1px solid #b8d7a4;
+                border-radius: 6px;
+                background: #f9fff4;
+                font-size: 15px;
+                padding: 10px 12px;
+                outline: none;
+            }
+            .remember-container {
+                display: flex;
+                align-items: center;
+                font-size: 13px;
+                color: #90b77d;
+                margin-bottom: 25px;
+            }
+            .login-btn {
+                width: 100%;
+                padding: 13px;
+                background-color: #cfe7b6;
+                color: #111;
+                border: none;
+                border-radius: 14px;
+                font-size: 18px;
+                font-weight: 500;
+                cursor: pointer;
+                margin-top: 10px;
+                transition: background 0.2s;
+            }
+            .login-btn:hover {
+                background-color: #b8d7a4;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <h:form>
+            <div class="login-container">
+                <div class="login-title">INICIO DE SESIÓN</div>
+                <p:growl id="growl" autoUpdate="true" showDetail="true" showSummary="false" />
+                <div class="input-group">
+                    <i class="pi pi-user input-icon"></i>
+                    <p:inputText id="username" value="#{loginBean.username}" 
+                                 placeholder="Usuario" 
+                                 required="true" 
+                                 styleClass="custom-input"/>
+                </div>
+
+
+                <div class="input-group">
+                    <i class="pi pi-lock input-icon"></i>
+                    <p:password id="password" value="#{loginBean.password}" 
+                                placeholder="Contraseña" 
+                                required="true"
+                                feedback="false"
+                                styleClass="custom-input"/>
+                </div>
+
+                <p:commandButton value="Ingresar"
+                                 action="#{loginBean.login}"
+                                 update="@form"
+                                 styleClass="login-btn"/>
+            </div>
+        </h:form>
+    </h:body>
+</f:view>
+</html>
