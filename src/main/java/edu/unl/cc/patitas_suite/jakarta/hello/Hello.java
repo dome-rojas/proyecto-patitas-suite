@@ -1,4 +1,4 @@
-package edu.unl.cc.jakarta.hello;
+package edu.unl.cc.patitas_suite.jakarta.hello;
 
 public class Hello {
 

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="primefaces">
+<h:head>
+    <title>Patitas Suite - Dashboard Empleado</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #c7e2ae;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .dashboard-card {
+            background-color: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Sombra */
+            border: 1px solid white;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .btn-action {
+            background-color: #a2cb6d;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            text-align: center;
+        }
+        .btn-action:hover {
+            background-color: #f0ffef;
+        }
+        .summary-card {
+            background-color: #c7e2ae;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e0f2f7;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .summary-card-icon {
+            font-size: 1.5rem;
+            color: white;
+        }
+        /* Estilos para tablas */
+        .custom-table th {
+            background-color: #c7e2ae; /* Fondo verde claro para encabezados */
+            color: #2c2c2c; /* Texto verde oscuro */
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid white;
+        }
+        .custom-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid white;
+        }
+        .custom-table tr:last-child td {
+            border-bottom: none; /* Eliminar borde inferior de la última fila */
+        }
+        .custom-table tbody tr:hover {
+            background-color: #f0fdf4; /* Efecto hover en filas */
+        }
+        /* Estilos para botones dentro de tabla */
+        .table-btn {
+            background-color: #c7e2ae; /* Verde claro */
+            color: #2c2c2c; /* Verde oscuro */
+            padding: 0.3rem 0.7rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+            border: none;
+            cursor: pointer;
+            margin-right: 0.5rem; /* Espacio entre botones */
+        }
+        .table-btn:hover {
+            background-color: #c7e2ae;
+        }
+        .table-btn-warning {
+            background-color: #fde68a;
+            color: #2c2c2c;
+        }
+        .table-btn-warning:hover {
+            background-color: #fcd34d;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-card {
+                padding: 1.5rem;
+            }
+            .grid-cols-4 {
+                grid-template-columns: repeat(2, minmax(0, 1fr)); /* 2 columnas en pantallas medianas */
+            }
+            .col-span-3 {
+                grid-column: span 2 / span 2;
+            }
+        }
+        @media (max-width: 768px) {
+            .grid-cols-4, .grid-cols-3 {
+                grid-template-columns: repeat(1, minmax(0, 1fr)); /* 1 columna en pantallas pequeñas */
+            }
+            .col-span-3, .col-span-2 {
+                grid-column: span 1 / span 1;
+            }
+            .btn-action {
+                margin-bottom: 0.75rem; /* Espacio entre botones en móviles */
+            }
+        }
+    </style>
+</h:head>
+<h:body>
+    <h:form>
+        <div class="dashboard-card">
+            <p:growl id="messages" showDetail="true" />
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8 pb-4 border-b border-gray-200">
+                <div class="flex items-center gap-4 mb-4 md:mb-0">
+                    <img src="images/perrito.jpg"
+                         alt="Logo Patitas Suite"
+                         class="w-80 h-auto object-contain"
+                         onerror="this.onerror=null; this.src='https://placehold.co/300x300/cccccc/333333?text=Logo+No+Disponible';"/>
+                    <div>
+                        <h1 class="text-4xl font-extrabold text-[#a2cb6d] drop-shadow-sm">Bienvenido, <h:outputText value="#{empleadoBean.nombreEmpleado}"/></h1>
+                        <p class="text-lg text-gray-500 mt-2">Fecha y hora actual: <span id="currentDateTime"></span></p>
+                        <script>
+                            // Script para mostrar la fecha y hora actual (se mantiene con JS por simplicidad)
+                            function updateDateTime() {
+                                const now = new Date();
+                                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+                                document.getElementById('currentDateTime').textContent = now.toLocaleDateString('es-ES', options);
+                            }
+                            setInterval(updateDateTime, 1000);
+                            updateDateTime();
+                        </script>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-3 w-full md:w-auto md:ml-auto">
+                    <h:commandButton value="➕ Registrar nueva mascota" styleClass="btn-action" action="#{empleadoBean.navegarARegistroMascota}"/>
+                    <h:commandButton value="🔄 Cerrar Sesion" styleClass="btn-action" action="#{loginBean.logout()}"/>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div class="summary-card">
+                    <i class="fas fa-dog summary-card-icon"></i>
+                    <div>
+                        <p class="text-gray-600 text-sm">Mascotas a tu cargo</p>
+                        <p class="text-2xl font-bold text-gray-800"><h:outputText value="#{empleadoBean.mascotasACargo}"/></p>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <i class="fas fa-bed summary-card-icon"></i>
+                    <div>
+                        <p class="text-gray-600 text-sm">Habitaciones asignadas</p>
+                        <p class="text-2xl font-bold text-gray-800"><h:outputText value="#{empleadoBean.habitacionesAsignadas}"/></p>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <i class="fas fa-tasks summary-card-icon"></i>
+                    <div>
+                        <p class="text-gray-600 text-sm">Tareas pendientes hoy</p>
+                        <p class="text-2xl font-bold text-gray-800"><h:outputText value="#{empleadoBean.tareasPendientesHoy}"/></p>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Mascotas Asignadas</h2>
+            <div class="overflow-x-auto mb-8">
+                <h:dataTable value="#{empleadoBean.listaMascotasAsignadas}" var="mascota"
+                             styleClass="min-w-full bg-white rounded-lg overflow-hidden custom-table">
+                    <h:column>
+                        <f:facet name="header">Mascota</f:facet>
+                        <h:outputText value="#{mascota.nombre}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Habitación</f:facet>
+                        <h:outputText value="#{mascota.habitacion}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Estado</f:facet>
+                        <h:outputText value="#{mascota.estado}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Tareas del día</f:facet>
+                        <ui:repeat value="#{mascota.tareasDelDia}" var="tarea">
+                            <div class="flex items-center mb-1">
+                                <h:selectBooleanCheckbox value="#{tarea.completada}" styleClass="mr-2"/>
+                                <h:outputText value="#{tarea.descripcion}"/>
+                            </div>
+                        </ui:repeat>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Acciones</f:facet>
+                        <h:commandButton value="🔍 Ver ficha" styleClass="table-btn" action="#{empleadoBean.mostrarMensaje() }" update="messages"/>
+                    </h:column>
+                </h:dataTable>
+            </div>
+        </div>
+    </h:form>
+</h:body>
+</html>

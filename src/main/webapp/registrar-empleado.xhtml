@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="primefaces">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Registrar Empleado</title>
+        <meta charset="UTF-8" />
+        <style>
+            body {
+                margin: 0;
+                font-family: "Segoe UI", sans-serif;
+                background-color: #cfe7b6;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+            }
+
+            .form-container {
+                background-color: white;
+                padding: 30px 40px;
+                border-radius: 20px;
+                box-shadow: 8px 8px 0 #b8d7a4;
+                width: 420px;
+            }
+
+            h2 {
+                text-align: center;
+                margin-bottom: 25px;
+                color: #7fa450;
+                font-size: 22px;
+            }
+
+            label {
+                display: block;
+                margin-bottom: 6px;
+                font-weight: bold;
+                color: #555;
+            }
+
+            input {
+                width: 100%;
+                padding: 10px;
+                margin-bottom: 5px;
+                border: 1px solid #b8d7a4;
+                border-radius: 8px;
+                background-color: #f9fff4;
+                font-size: 14px;
+            }
+
+            .button {
+                width: 100%;
+                padding: 12px;
+                background-color: #cfe7b6;
+                color: black;
+                border: none;
+                border-radius: 12px;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+            }
+
+            .button:hover {
+                background-color: #b8d7a4;
+            }
+
+            .input-group {
+                margin-bottom: 15px;
+            }
+
+            .ui-message {
+                color: red;
+                font-size: 12px;
+                margin-top: -10px;
+                margin-bottom: 10px;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <div class="form-container">
+            <h2>Registrar Nuevo Empleado</h2>
+
+            <h:form id="registroForm">
+                <p:growl id="growl" showDetail="true" autoUpdate="true" />
+
+                <div class="input-group">
+                    <label for="nombre">Nombre</label>
+                    <p:inputText id="nombre" value="#{empleadoBean.nombre}"
+                                 placeholder="ej. Miguel Armas"
+                                 required="true"
+                                 requiredMessage="El nombre es obligatorio"/>
+                    <p:message for="nombre" />
+                </div>
+
+                <div class="input-group">
+                    <label for="cedula">Cédula</label>
+                    <p:inputText id="cedula" value="#{empleadoBean.cedula}"
+                                 placeholder="ej. 1103203889"
+                                 required="true"
+                                 requiredMessage="La cedula es obligatoria"/>
+                    <p:message for="cedula" />
+                </div>
+
+                <div class="input-group">
+                    <label for="telefono">Teléfono</label>
+                    <p:inputText id="telefono" value=""
+                                 placeholder="ej. 0979448157"/>
+                    <p:message for="telefono" />
+                </div>
+
+                <div class="input-group">
+                    <label for="correo">Correo Electrónico</label>
+                    <p:inputText id="correo" value=""
+                                 placeholder="ej. ejemplo@email.com"/>
+                    <p:message for="correo" />
+                </div>
+
+                <p:commandButton value="Registrar"
+                                 action="#{empleadoBean.registrar}"
+                                 update="growl registroForm"
+                                 process="@form"
+                                 styleClass="button" />
+            </h:form>
+        </div>
+    </h:body>
+</f:view>
+</html>
