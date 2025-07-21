@@ -1,20 +1,34 @@
 package edu.unl.cc.patitas_suite.dominio.seguridad;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import edu.unl.cc.patitas_suite.dominio.comun.Usuario;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
+@Entity
 public class RegistroSalud {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDate fecha;
     private String diagnostico;
     private String tratamiento;
     private String observaciones;
+    @ManyToOne
+    @JoinColumn(name = "mascota_id")
+    private Mascota mascota;
 
-    private ExpedienteMedico expedienteMedico;
+    @ManyToOne
+    @JoinColumn(name = "empleado_id")
+    private Usuario empleado;
+
+    public Usuario getEmpleado() {
+        return empleado;
+    }
+
+    public void setEmpleado(Usuario empleado) {
+        this.empleado = empleado;
+    }
 
     public Long getId() {
         return id;
@@ -56,11 +70,4 @@ public class RegistroSalud {
         this.observaciones = observaciones;
     }
 
-    public ExpedienteMedico getExpedienteMedico() {
-        return expedienteMedico;
-    }
-
-    public void setExpedienteMedico(ExpedienteMedico expedienteMedico) {
-        this.expedienteMedico = expedienteMedico;
-    }
 }

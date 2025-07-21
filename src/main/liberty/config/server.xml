@@ -8,4 +8,45 @@
     <keyStore id="defaultKeyStore" password="password" />
     <httpEndpoint id="defaultHttpEndpoint" host="*" httpPort="9080" httpsPort="9443" />
     <webApplication location="patitas-suite.war" contextRoot="/"/>
+
+
+    <logging consoleFormat="SIMPLE" consoleLogLevel="INFO" />
+    <logging messageFormat="TBASIC" messageLogLevel="INFO" />
+    <!--logging traceFormat="ENHANCED" traceSpecification="*=all" /-->
+    <logging  traceSpecification="JPA=all" />
+
+    <!-- Modificar el que ayuda a configurar los proveedores de persistencia-->
+    <!--
+    <jpa defaultPersistenceProvider="org.hibernate.jpa.HibernatePersistenceProvider">
+        <defaultProperties>
+            <property name="javax.persistence.lock.timeout" value="4000"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL9Dialect"/>
+        </defaultProperties>
+    </jpa>
+    -->
+
+    <!-- Configuración del datasource -->
+    <dataSource id="patitas-suiteDS" jndiName="jdbc/patitas-suiteDS">
+        <jdbcDriver id="mysql-driver" libraryRef="MySqlJDBCLib"/>
+        <properties serverName="${db.server.name}"
+                    portNumber="${db.port.number}"
+                    databaseName="patitas-suite"
+                    user="patitas_admin"
+                    password="12345678"
+                    useSSL="false" serverTimezone="UTC"/>
+        <!--
+        <properties.postgresql
+                serverName="${db.server.name}"
+                portNumber="${db.port.number}"
+                databaseName="jbrew"
+                user="jbrewuser"
+                password="jbrewUser2525"
+        />
+        -->
+    </dataSource>
+
+    <!-- Referencia al driver JDBC de MySQL -->
+    <library id="MySqlJDBCLib">
+        <fileset dir="${driver.jdbc.dir}" includes="mysql-connector-j-*.jar"/>
+    </library>
 </server>

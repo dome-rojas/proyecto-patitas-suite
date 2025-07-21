@@ -85,7 +85,7 @@
                 <p:growl id="growl" autoUpdate="true" showDetail="true" showSummary="false" />
                 <div class="input-group">
                     <i class="pi pi-user input-icon"></i>
-                    <p:inputText id="username" value="#{loginBean.username}" 
+                    <p:inputText id="username" value="#{autenticacionBean.nombreUsuario}"
                                  placeholder="Usuario" 
                                  required="true" 
                                  styleClass="custom-input"/>
@@ -94,7 +94,7 @@
 
                 <div class="input-group">
                     <i class="pi pi-lock input-icon"></i>
-                    <p:password id="password" value="#{loginBean.password}" 
+                    <p:password id="password" value="#{autenticacionBean.clave}"
                                 placeholder="Contraseña" 
                                 required="true"
                                 feedback="false"
@@ -102,7 +102,7 @@
                 </div>
 
                 <p:commandButton value="Ingresar"
-                                 action="#{loginBean.login}"
+                                 action="#{autenticacionBean.login()}"
                                  update="@form"
                                  styleClass="login-btn"/>
             </div>

@@ -1,5 +1,9 @@
 package edu.unl.cc.patitas_suite.controladores;
 
+import edu.unl.cc.patitas_suite.dominio.comun.Usuario;
+import edu.unl.cc.patitas_suite.dominio.seguridad.Tarea;
+import edu.unl.cc.patitas_suite.excepciones.EntityNotFoundException;
+import edu.unl.cc.patitas_suite.negocios.*;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
@@ -47,6 +51,41 @@ public class AdminBean implements Serializable {
         listaHabitaciones.add(new Habitacion("106", "Limpieza", "-"));
         listaHabitaciones.add(new Habitacion("107", "Disponible", "-"));
     }
+    public int totalMascotas() throws EntityNotFoundException {
+        FachadaDeMascota fachada = new FachadaDeMascota();
+        return fachada.findMascotas().size();
+    }
+
+    public int totalHabitaciones() throws EntityNotFoundException {
+        FachadaDeHabitacion fachada = new FachadaDeHabitacion();
+        return fachada.todasLasHabitaciones().size();
+    }
+
+    public int totalTareas() throws EntityNotFoundException {
+        FachadaDeTareas fachada = new FachadaDeTareas();
+        return fachada.todasLasTareas().size();
+    }
+
+    public int totalEmpleados(){
+        FachadaDeEmpleado fachada = new FachadaDeEmpleado();
+        return fachada.obtenerTodosLosEmpleados().size();
+    }
+    public List<Usuario> todosEmpleados(){
+        FachadaDeEmpleado fachada = new FachadaDeEmpleado();
+        return fachada.obtenerTodosLosEmpleados();
+    }
+
+    public void totalHabitacionesDisponibles(){}
+
+    public List<Usuario> listaUsuarios() throws EntityNotFoundException {
+        FachadaDeSeguridad fachada = new FachadaDeSeguridad();
+        return fachada.findUsers();
+    }
+    public List<Tarea> tareasRecientes() throws EntityNotFoundException {
+        FachadaDeTareas fachada = new FachadaDeTareas();
+        return fachada.todasLasTareas();
+    }
+
 
     public int getTotalMascotasHospedadas() {
         return totalMascotasHospedadas;
@@ -56,9 +95,6 @@ public class AdminBean implements Serializable {
         return habitacionesDisponibles;
     }
 
-    public int getTotalHabitaciones() {
-        return totalHabitaciones;
-    }
 
     public int getEmpleadosActivos() {
         return empleadosActivos;

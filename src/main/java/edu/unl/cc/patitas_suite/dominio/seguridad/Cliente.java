@@ -1,21 +1,30 @@
 package edu.unl.cc.patitas_suite.dominio.seguridad;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Cliente {
+@Entity
+public class Cliente implements Serializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull @NotEmpty
     private String nombre;
+    @NotNull @NotEmpty
     private String contacto;
+    @NotNull @NotEmpty
     private String direccion;
-    private String metodoPago;
 
+    //private String metodoPago;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "propietario_mascota",
+        joinColumns = @JoinColumn(name = "cliente_id"),
+        inverseJoinColumns = @JoinColumn(name = "mascota_id"))
     private List<Mascota> mascotas;
 
     public Cliente(String nombre, String contacto, 
@@ -23,7 +32,10 @@ public class Cliente {
         this.nombre = nombre;
         this.contacto = contacto;
         this.direccion = direccion;
-        this.metodoPago = metodoPago;
+    }
+
+    public Cliente() {
+
     }
 
     public Long getId() {
@@ -40,14 +52,6 @@ public class Cliente {
 
     public void setMascotas(List<Mascota> mascotas) {
         this.mascotas = mascotas;
-    }
-
-    public String getMetodoPago() {
-        return metodoPago;
-    }
-
-    public void setMetodoPago(String metodoPago) {
-        this.metodoPago = metodoPago;
     }
 
     public String getDireccion() {
