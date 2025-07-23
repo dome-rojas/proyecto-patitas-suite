@@ -20,7 +20,7 @@ public class Habitacion implements Serializable {
     private Long id;
     @NotNull @NotEmpty
     private String tipo;
-    @NotNull @NotEmpty
+
     private int capacidad;
     @Enumerated(EnumType.STRING)
     private EstadoHabitacion estado=EstadoHabitacion.LIBRE;

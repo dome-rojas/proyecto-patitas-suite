@@ -30,7 +30,19 @@ public class FachadaDeSeguridad implements Serializable {
             Rol rolPersisted = repositorioDeRoles.save(rol);
             return rolPersisted;
     }
+    public Usuario updateContrasena(Long usuarioId, String nuevaClave) throws Exception {
+        Usuario usuarioBD = repositorioDeUsuarios.find(usuarioId); // 1. Traes desde BD
 
+        if (usuarioBD == null) {
+            throw new Exception("Usuario no encontrado");
+        }
+
+        String pwdEncrypted = GestorDeCifrado.encrypt(nuevaClave);
+        usuarioBD.setClave(pwdEncrypted);
+        usuarioBD.setPrimerIngreso(false);
+
+        return repositorioDeUsuarios.save(usuarioBD); // 2. Solo guarda lo necesario
+    }
     public Usuario create(Usuario usuario) throws Exception {
         String pwdEncrypted = GestorDeCifrado.encrypt(usuario.getClave());
         usuario.setClave(pwdEncrypted);

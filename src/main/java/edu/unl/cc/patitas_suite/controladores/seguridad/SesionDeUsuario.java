@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 @Named
 @SessionScoped
 public class SesionDeUsuario implements Serializable {
-    @Serial
+
     private static final long serialVersionUID = 1L;
 
     private static final Logger logger = Logger.getLogger(SesionDeUsuario.class.getName());
@@ -30,8 +30,8 @@ public class SesionDeUsuario implements Serializable {
     public void postLogin(@NotNull Usuario usuario) throws EntityNotFoundException {
         logger.info("Usuario Registrado en : " + usuario.getNombre());
         this.usuario = usuario;
-        Rol rol = securityFacade.findRolesWithPermission(this.usuario.getId());
-        usuario.setRol(rol);
+        //Rol rol = securityFacade.findRolesWithPermission(this.usuario.getId());
+        //usuario.setRol(rol);
     }
 
     public boolean hasPermissionForPage(String pagePath) {

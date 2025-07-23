@@ -42,17 +42,20 @@ public class AutenticacionBean implements Serializable {
     public String login(){
         logger.info("Logging in with username: " + nombreUsuario);
         logger.info("Logging in with password: " + clave);
+
         try {
             Usuario usuario = securityFacade.authenticate(nombreUsuario, clave);
+            logger.info("Logging in with password: " + usuario.getRol().getNombre());
             setHttpSession(usuario);
-
+            logger.info("Logging in with password: " + usuario.getRol().getNombre());
             FacesUtil.addMessageAndKeep(FacesMessage.SEVERITY_INFO, "Aviso", "Bienvenido " + usuario.getNombre() + " a la aplicación Patitas Suite.");
             //FacesMessage fc = new FacesMessage(FacesMessage.SEVERITY_INFO, "Bienvenido", "Bienvenido " + user.getName() + " a la aplicación Jbrew.");
             //facesContext.addMessage(null, fc);
             //facesContext.getExternalContext().getFlash().setKeepMessages(true);
-
+            logger.info("Logging in with password: " + usuario.getRol().getNombre());
             System.out.println("--------------> userSession Login: " + sesionDeUsuario.getUsuario());
             sesionDeUsuario.postLogin(usuario);
+            logger.info("Logging in with password: " + usuario.getRol().getNombre());
             if(usuario.esPrimerIngreso()){
                 FacesUtil.addSuccessMessageAndKeep("Bienvenido al sistema. Por favor, actualice su información.");
                 return ("cambiar-clave.xhtml?faces-redirect=true");
@@ -85,7 +88,7 @@ public class AutenticacionBean implements Serializable {
     private void setHttpSession(Usuario usuario){
         FacesContext context = FacesContext.getCurrentInstance();
         UsuarioPrincipal userPrincipal = new UsuarioPrincipal(usuario);
-        context.getExternalContext().getSessionMap().put("usuario", userPrincipal);
+        context.getExternalContext().getSessionMap().put("usuario", usuario);
     }
 
     public String getNombreUsuario() {

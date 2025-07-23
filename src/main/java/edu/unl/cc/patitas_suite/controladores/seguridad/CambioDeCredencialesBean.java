@@ -3,6 +3,7 @@ package edu.unl.cc.patitas_suite.controladores.seguridad;
 import edu.unl.cc.patitas_suite.controladores.AutenticacionBean;
 import edu.unl.cc.patitas_suite.dominio.comun.Usuario;
 import edu.unl.cc.patitas_suite.negocios.FachadaDeSeguridad;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
@@ -26,36 +27,50 @@ public class CambioDeCredencialesBean implements Serializable {
     private String confirmarClave;
 
     @Inject
-    private SesionDeUsuario sesionDeUsuario;
+    private Usuario usuario;
 
     @Inject
     private FachadaDeSeguridad seguridad;
     private AutenticacionBean autenticacionBean;
+    @PostConstruct
+    public void init() {
 
+        this.usuario = (Usuario) FacesContext.getCurrentInstance()
+                .getExternalContext()
+                .getSessionMap()
+                .get("usuario");
+        System.out.println("-------------"+usuario.getRol().getNombre().toLowerCase()+"--------------");
+        System.out.println("EN EL INIT");
+
+    }
     public String cambiarContrasena() throws ServletException {
-        Usuario usuario = sesionDeUsuario.getUsuario();
-
         if (!nuevaClave.equals(confirmarClave)) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Las contraseñas no coinciden.", null));
             return null;
         }
-        usuario.setClave(nuevaClave);
         try {
-            usuario.setPrimerIngreso(false);
-            seguridad.update(usuario);
+            seguridad.updateContrasena(usuario.getId(), nuevaClave);
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Contraseña actualizada correctamente.", null));
 
-            return (usuario.getRol().getNombre().toLowerCase()+"-dashboard.xhtml?faces-redirect=true");
-        }catch (Exception e){
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al actulizar la contraseña, intente nuevamente", null));
-            usuario.setPrimerIngreso(true);
-            autenticacionBean.logout();
+            System.out.println("-------------"+usuario.getRol().getNombre().toLowerCase()+"--------------");
+            System.out.println("EN CAMBIO CONTRASEÑA");
+            return usuario.getRol().getNombre().toLowerCase() + "-dashboard.xhtml?faces-redirect=true";
 
-            return "login.xhtml?faces-redirect=true";
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al actualizar la contraseña", null));
+            return null;
         }
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     // Getters y Setters

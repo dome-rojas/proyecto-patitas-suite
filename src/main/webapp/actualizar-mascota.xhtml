@@ -136,7 +136,6 @@
                 <label>Número de habitación:</label>
                 <p:selectOneMenu id="habitacion"
                                  value="#{editarMascotaBean.mascotaSeleccionada.habitacion.id}"
-                                 converter="javax.faces.Long"
                                  style="width: 100%;">
                     <f:selectItem itemLabel="Seleccione una habitación" itemValue="#{null}" />
                     <f:selectItems value="#{editarMascotaBean.habitacionesDisponibles}"
