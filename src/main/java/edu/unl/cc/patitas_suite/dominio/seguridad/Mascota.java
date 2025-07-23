@@ -1,41 +1,129 @@
 package edu.unl.cc.patitas_suite.dominio.seguridad;
 
+import edu.unl.cc.patitas_suite.dominio.comun.Usuario;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Mascota {
+@Entity
+@NamedQueries({
+    @NamedQuery(name = "Mascota.findByNombreAndPropietario",
+                query = "SELECT m FROM Mascota m WHERE LOWER(m.nombre) = :nombre AND m.propietario.id = :propietarioId"),
+    @NamedQuery(name = "Mascota.findByCuidador",
+                query = "SELECT m FROM Mascota m WHERE m.cuidador.id = :cuidadorId"),
+        @NamedQuery(
+                name = "Mascota.findAll",
+                query = "SELECT m FROM Mascota m"
+        )
+})
+public class Mascota implements Serializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nombre;
-    private String especie;
-    private String raza;
-    private LocalDate edad;
-    private String estado;
 
+    @NotNull @NotEmpty
+    private String nombre;
+
+    @NotNull @NotEmpty
+    private String especie;
+
+    @NotNull @NotEmpty
+    private String raza;
+
+    @NotNull @NotEmpty
+    private float peso;
+
+    @NotNull @NotEmpty
+    @Enumerated(EnumType.STRING)
+    private Complexion complexion;
+
+    @NotNull @NotEmpty
+    private LocalDate fechaNacimiento;
+
+    @ManyToOne
+    @JoinColumn(name = "propietario_id")
     private Cliente propietario;
 
+    @ManyToOne
+    @JoinColumn(name = "habitacion_id")
     private Habitacion habitacion;
 
     private ExpedienteMedico expedienteMedico;
 
+    private EstadoMascota estado=EstadoMascota.SANO;
+
+    @ManyToOne
+    @JoinColumn(name = "cuidador_id")
+    private Usuario cuidador;
+
+    @ManyToOne
+    @JoinColumn(name = "reserva_id")
+    private Reserva reserva;
+
+    public Mascota() {
+
+    }
+
     private void validarRestriccionDeNombre(String text) throws IllegalArgumentException{
         if (text == null || text.isEmpty()){
-            throw new IllegalArgumentException("Valor reequerido para nombre");
+            throw new IllegalArgumentException("Valor requerido para nombre");
         }
     }
+
     public Mascota(String nombre, String especie,
-                   String raza, LocalDate edad, String necesidadesEspeciales,
-                   String historialVacunas, String estado)
+                   String raza, LocalDate fechaNacimiento, String necesidadesEspeciales,
+                   String historialVacunas, String estado, float peso)
             throws IllegalArgumentException{
         validarRestriccionDeNombre(nombre);
         this.nombre = nombre;
         this.especie = especie;
         this.raza = raza;
-        this.edad = edad;
+        this.fechaNacimiento = fechaNacimiento;
+        this.peso = peso;
+    }
+
+    public float getPeso() {
+        return peso;
+    }
+
+    public void setPeso(float peso) {
+        this.peso = peso;
+    }
+
+    public Complexion getComplexion() {
+        return complexion;
+    }
+
+    public void setComplexion(Complexion complexion) {
+        this.complexion = complexion;
+    }
+
+    public EstadoMascota getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoMascota estado) {
         this.estado = estado;
+    }
+
+    public Reserva getReserva() {
+        return reserva;
+    }
+
+    public void setReserva(Reserva reserva) {
+        this.reserva = reserva;
+    }
+
+    public Usuario getCuidador() {
+        return cuidador;
+    }
+
+    public void setCuidador(Usuario cuidador) {
+        this.cuidador = cuidador;
     }
     public Long getId() {
         return id;
@@ -69,20 +157,12 @@ public class Mascota {
         this.propietario = propietario;
     }
 
-    public String getEstado() {
-        return estado;
+    public LocalDate getFechaNacimiento() {
+        return fechaNacimiento;
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
-    public LocalDate getEdad() {
-        return edad;
-    }
-
-    public void setEdad(LocalDate edad) {
-        this.edad = edad;
+    public void setFechaNacimiento(LocalDate edad) {
+        this.fechaNacimiento = edad;
     }
 
     public String getRaza() {
@@ -113,11 +193,11 @@ public class Mascota {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Mascota mascota = (Mascota) o;
-        return Objects.equals(id, mascota.id) && Objects.equals(nombre, mascota.nombre) && Objects.equals(especie, mascota.especie) && Objects.equals(raza, mascota.raza) && Objects.equals(edad, mascota.edad);
+        return Objects.equals(nombre, mascota.nombre) && Objects.equals(especie, mascota.especie) && Objects.equals(raza, mascota.raza) && Objects.equals(fechaNacimiento, mascota.fechaNacimiento) && Objects.equals(propietario, mascota.propietario);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nombre, especie, raza, edad);
+        return Objects.hash(nombre, especie, raza, fechaNacimiento, propietario);
     }
 }

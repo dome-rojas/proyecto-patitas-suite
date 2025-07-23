@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Reportar Enfermedad - Patitas Suite</title>
+    <h:outputStylesheet>
+        body {
+            background-color: #c7e2ae;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .form-title {
+            color: #6ba539;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: bold;
+            color: #444;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .form-textarea {
+            resize: none;
+        }
+
+        .reportar-btn {
+            background-color: #6ba539;
+            color: white;
+            padding: 12px;
+            width: 100%;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .reportar-btn:hover {
+            background-color: #558a2b;
+        }
+    </h:outputStylesheet>
+</h:head>
+
+<h:body>
+    <h:form styleClass="form-container">
+        <h:outputText value="Reportar Enfermedad" styleClass="form-title" />
+
+        <!-- Nombre de la mascota solo lectura -->
+        <div class="form-group">
+            <h:outputLabel for="nombreMascota" value="Nombre de la mascota" styleClass="form-label" />
+            <p:inputText id="nombreMascota" value="#{reporteBean.nombreMascota}" readonly="true" styleClass="form-input" />
+        </div>
+
+        <!-- Síntomas (área fija) -->
+        <div class="form-group">
+            <h:outputLabel for="sintomas" value="Síntomas observados" styleClass="form-label" />
+            <p:inputTextarea id="sintomas" value="#{reporteBean.sintomas}" rows="5"
+                             autoResize="false" required="true" styleClass="form-textarea" />
+        </div>
+
+        <!-- Fecha con calendario popup -->
+        <div class="form-group">
+            <h:outputLabel for="fecha" value="Fecha del reporte" styleClass="form-label" />
+            <p:calendar id="fecha" value="#{reporteBean.fecha}" pattern="dd/MM/yyyy"
+                        showIcon="true" required="true" styleClass="form-input" />
+        </div>
+
+        <!-- Botón -->
+        <p:commandButton value="Reportar" action="#{reporteBean.enviarReporte}" styleClass="reportar-btn" />
+    </h:form>
+</h:body>
+</html>

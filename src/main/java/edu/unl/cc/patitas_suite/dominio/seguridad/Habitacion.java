@@ -1,19 +1,32 @@
 package edu.unl.cc.patitas_suite.dominio.seguridad;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Habitacion {
-    @Id
-    @GeneratedValue
-    private Long id;
-    private String tipo;
-    private int capacidad;
-    private String caracteristicas;
-    private String estado;
+@Entity
+@NamedQueries({
+        @NamedQuery(
+                name = "Habitacion.findAll",
+                query = "SELECT h FROM Habitacion h")
+})
 
+public class Habitacion implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @NotNull @NotEmpty
+    private String tipo;
+    @NotNull @NotEmpty
+    private int capacidad;
+    @Enumerated(EnumType.STRING)
+    private EstadoHabitacion estado=EstadoHabitacion.LIBRE;
+
+    @ManyToOne
+    @JoinColumn(name = "mascota_actual_id")
     private Mascota mascotaActual;
 
     public Long getId() {
@@ -32,28 +45,20 @@ public class Habitacion {
         this.tipo = tipo;
     }
 
+    public EstadoHabitacion getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoHabitacion estado) {
+        this.estado = estado;
+    }
+
     public int getCapacidad() {
         return capacidad;
     }
 
     public void setCapacidad(int capacidad) {
         this.capacidad = capacidad;
-    }
-
-    public String getCaracteristicas() {
-        return caracteristicas;
-    }
-
-    public void setCaracteristicas(String caracteristicas) {
-        this.caracteristicas = caracteristicas;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
     }
 
     public Mascota getMascotaActual() {

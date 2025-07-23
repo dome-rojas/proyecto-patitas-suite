@@ -5,7 +5,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
-    <title>Empleado - Patitas Suite</title>
+    <title>Recepcionista - Patitas Suite</title>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
@@ -81,7 +81,7 @@
             border: none;
             color: white;
             font-weight: bold;
-            border-radius: 9999px; /* Forma de píldora */
+            border-radius: 9999px;
             padding: 0.75rem 1.5rem;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
             text-shadow: 1px 1px 1px #2c2c2c;
@@ -192,7 +192,6 @@
     </style>
 </h:head>
 
-
 <h:body>
     <h:form>
         <div class="dashboard-card">
@@ -201,15 +200,13 @@
             <div class="header">
                 <img src="images/perrito.jpg" alt="Logo Patitas Suite"/>
                 <div class="header-text">
-                    <h1>Bienvenido Empleado</h1>
+                    <h1>Bienvenido Recepcionista</h1>
                     <p>Fecha y hora actual: <span id="currentDateTime"></span></p>
                 </div>
-
-                <!-- Botones de acciones -->
                 <div style="display:flex;gap:1rem;flex-wrap:wrap;">
-                    <p:commandButton value="🐶 Registrar nueva mascota"
-                                     action="#{empleadoBean.irRegistrarMascota}"
-                                     styleClass="ui-button-primary"/>
+                    <p:commandButton value="➕ Registrar Llegada"
+                                     action="#{recepcionistaBean.irRegistrarLlegada}"
+                                     styleClass="ui-button-primary" />
 
                     <p:commandButton value="🔄 Cerrar Sesión"
                                      action="#{loginBean.logout}"
@@ -230,128 +227,107 @@
                 updateDateTime();
             </script>
 
-            <!-- Resumen del dia -->
+            <!-- Reservas del dia -->
             <div class="section-container">
+                <h2 class="section-title"><i class="fas fa-calendar-check"></i> Reservas del Día</h2>
 
-                <div class="resumen-panel">
-                    <div class="resumen-item">
-                        <i class="fas fa-dog resumen-icon icon-perro"></i>
-                        <span class="resumen-label">Mascotas a mi cargo:</span>
-                        <strong><h:outputText value="#{adminBean.totalMascotas}" /></strong>
-                    </div>
-                    <div class="resumen-item">
-                        <i class="fas fa-bed resumen-icon icon-cama"></i>
-                        <span class="resumen-label">Habitaciones asignadas:</span>
-                        <strong><h:outputText value="#{adminBean.totalHabitacion}" /></strong>
-                    </div>
-                    <div class="resumen-item">
-                        <i class="fas fa-clipboard-list resumen-icon icon-lista"></i>
-                        <span class="resumen-label">Tareas Pendientes hoy:</span>
-                        <strong><h:outputText value="#{adminBean.totaTareas}" /></strong>
-                    </div>
-                </div>
+                <p:dataTable value="#{recepcionistaBean.reservasDelDia}"
+                             var="res"
+                             emptyMessage="No hay reservas registradas para hoy."
+                             styleClass="custom-tareas-table"
+                             widgetVar="reservasTable">
+
+                    <p:column headerText="Mascota">
+                        <h:outputText value="#{res.nombreMascota}" />
+                    </p:column>
+
+                    <p:column headerText="Dueño">
+                        <h:outputText value="#{res.nombreDueno}" />
+                    </p:column>
+
+                    <p:column headerText="Hora de Llegada">
+                        <h:outputText value="#{res.horaLlegada}" />
+                    </p:column>
+
+                    <p:column headerText="Acciones" exportable="false">
+                        <p:commandButton icon="pi pi-check-circle"
+                                         title="Registrar llegada"
+                                         styleClass="ui-button-flat acciones-btn"/>
+                        <p:commandButton icon="pi pi-search"
+                                         title="Ver detalles"
+                                         styleClass="ui-button-flat acciones-btn"/>
+                    </p:column>
+                </p:dataTable>
             </div>
 
-            <!-- Mascotas Asignadas -->
+            <!-- Salidas Programadas -->
             <div class="section-container">
-                <h2 class="section-title"><i class="fas fa-paw"></i> Mascotas a mi Cargo</h2>
-                <p:dataTable value="#{empleadoBean.listaMascotas}" var="mascota"
-                         emptyMessage="No hay mascotas asignadas aún."
-                         styleClass="custom-tareas-table"
-                         widgetVar="mascotasTable">
+                <h2 class="section-title"><i class="fas fa-sign-out-alt"></i> Salidas Programadas</h2>
 
-                <p:column headerText="Nombre">
-                    <h:outputText value="#{mascota.nombre}" />
-                </p:column>
+                <p:dataTable value="#{recepcionistaBean.salidasDelDia}"
+                             var="sal"
+                             emptyMessage="No hay check-outs programados para hoy."
+                             styleClass="custom-tareas-table"
+                             widgetVar="salidasTable">
 
-                <p:column headerText="Habitación">
-                    <h:outputText value="#{mascota.numeroHabitacion}" />
-                </p:column>
+                    <p:column headerText="Mascota">
+                        <h:outputText value="#{sal.nombreMascota}" />
+                    </p:column>
 
-                <p:column headerText="Estado">
-                    <h:outputText value="#{mascota.estado}" />
-                </p:column>
+                    <p:column headerText="Dueño">
+                        <h:outputText value="#{sal.nombreDueno}" />
+                    </p:column>
 
-                <p:column headerText="Acciones" exportable="false">
-                    <p:commandButton icon="pi pi-search"
-                                     title="Ver ficha"
-                                     styleClass="ui-button-flat ui-button-info" />
+                    <p:column headerText="Hora de Salida">
+                        <h:outputText value="#{sal.horaSalida}" />
+                    </p:column>
 
-                    <p:commandButton icon="pi pi-check-circle"
-                                     title="Atender"
-                                     styleClass="ui-button-flat ui-button-success" />
-
-                    <p:commandButton icon="pi pi-exclamation-triangle"
-                                     title="Reportar enfermedad"
-                                     styleClass="ui-button-flat ui-button-danger" />
-                </p:column>
-            </p:dataTable>
+                    <p:column headerText="Acciones" exportable="false">
+                        <p:commandButton icon="pi pi-sign-out"
+                                         title="Registrar salida"
+                                         styleClass="ui-button-flat acciones-btn"/>
+                        <p:commandButton icon="pi pi-file-pdf"
+                                         title="Generar factura"
+                                         styleClass="ui-button-flat acciones-btn"/>
+                    </p:column>
+                </p:dataTable>
             </div>
 
-            <!-- Tareas del dia -->
+            <!-- GESTIÓN DE HABITACIONES -->
             <div class="section-container">
-                <h2 class="section-title"><i class="fas fa-clipboard-check"></i> Mis Tareas del Día</h2>
-                <p:dataTable value="#{empleadoBean.listaTareas}" var="tarea"
-                         emptyMessage="No hay tareas asignadas aún."
-                         styleClass="custom-tareas-table"
-                         widgetVar="tareasTable">
+                <h2 class="section-title"><i class="fas fa-bed"></i> Estado de Habitaciones</h2>
 
-                <p:column headerText="Tarea">
-                    <h:outputText value="#{tarea.descripcion}" />
-                </p:column>
+                <p:dataTable value="#{recepcionistaBean.listaHabitaciones}"
+                             var="hab"
+                             emptyMessage="No hay habitaciones registradas."
+                             styleClass="custom-tareas-table"
+                             widgetVar="habitacionesTable">
 
-                <p:column headerText="Mascota">
-                    <h:outputText value="#{tarea.nombreMascota}" />
-                </p:column>
+                    <p:column headerText="N.º Habitación">
+                        <h:outputText value="#{hab.numero}" />
+                    </p:column>
 
-                <p:column headerText="Estado">
-                    <h:outputText value="#{tarea.estado}" />
-                </p:column>
+                    <p:column headerText="Estado">
+                        <h:outputText value="#{hab.estado}" />
+                    </p:column>
 
-                <p:column headerText="Acciones" exportable="false">
-                    <p:commandButton icon="pi pi-check"
-                                     title="Marcar como completada"
-                                     styleClass="ui-button-flat ui-button-success" />
+                    <p:column headerText="Ocupada por">
+                        <h:outputText value="#{hab.nombreMascota}" />
+                    </p:column>
 
-                    <p:commandButton icon="pi pi-eye"
-                                     title="Ver detalle"
-                                     styleClass="ui-button-flat ui-button-info" />
-                </p:column>
-            </p:dataTable>
+                    <p:column headerText="Acciones" exportable="false">
+                        <p:commandButton icon="pi pi-search"
+                                         title="Ver detalle"
+                                         styleClass="ui-button-flat acciones-btn"/>
+                        <p:commandButton icon="pi pi-broom"
+                                         title="Marcar para limpieza"
+                                         styleClass="ui-button-flat acciones-btn"/>
+                        <p:commandButton icon="pi pi-check-circle"
+                                         title="Marcar como disponible"
+                                         styleClass="ui-button-flat acciones-btn"/>
+                    </p:column>
+                </p:dataTable>
             </div>
-
-            <!-- Habitaciones -->
-            <div class="section-container">
-                <h2 class="section-title"><i class="fas fa-door-open"></i> Habitaciones a mi Cargo</h2>
-                <p:dataTable value="#{empleadoBean.listaHabitaciones}" var="habitacion"
-                         emptyMessage="No hay habitaciones asignadas aún."
-                         styleClass="custom-tareas-table"
-                         widgetVar="habitacionesTable">
-
-                <p:column headerText="Número">
-                    <h:outputText value="#{habitacion.numero}" />
-                </p:column>
-
-                <p:column headerText="Estado">
-                    <h:outputText value="#{habitacion.estado}" />
-                </p:column>
-
-                <p:column headerText="Mascota actual">
-                    <h:outputText value="#{habitacion.nombreMascota}" />
-                </p:column>
-
-                <p:column headerText="Acciones" exportable="false">
-                    <p:commandButton icon="pi pi-broom"
-                                     title="Marcar para limpieza"
-                                     styleClass="ui-button-flat ui-button-warning" />
-
-                    <p:commandButton icon="pi pi-check"
-                                     title="Marcar como lista"
-                                     styleClass="ui-button-flat ui-button-success" />
-                </p:column>
-            </p:dataTable>
-            </div>
-
         </div>
     </h:form>
 </h:body>

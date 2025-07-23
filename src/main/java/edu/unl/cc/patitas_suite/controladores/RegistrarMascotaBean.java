@@ -1,6 +1,8 @@
 package edu.unl.cc.patitas_suite.controladores;
 
 import edu.unl.cc.patitas_suite.dominio.seguridad.Mascota;
+import edu.unl.cc.patitas_suite.excepciones.EntityNotFoundException;
+import edu.unl.cc.patitas_suite.faces.FacesUtil;
 import edu.unl.cc.patitas_suite.negocios.FachadaDeMascota;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.view.ViewScoped;
@@ -21,7 +23,12 @@ public class MascotaBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        mascotas = fachadaDeMascota.obtenerMascotasPorEstado("Activa");
+        try {
+            mascotas = fachadaDeMascota.findMascotas("Estado");
+        }catch (EntityNotFoundException e) {
+            FacesUtil.addErrorMessage("No se pudieron encontrar mascotas");
+        }
+
     }
 
     public void registrarMascota() {}
