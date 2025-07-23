@@ -7,7 +7,14 @@ import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
+
 @Entity
+@NamedQueries({
+        @NamedQuery(
+                name = "Cliente.findLikeName",
+                query = "SELECT c FROM Cliente c WHERE LOWER(c.nombre) LIKE :nombre"
+        )
+})
 public class Cliente implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

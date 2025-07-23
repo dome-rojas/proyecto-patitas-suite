@@ -5,17 +5,19 @@ import edu.unl.cc.patitas_suite.dominio.seguridad.Rol;
 import edu.unl.cc.patitas_suite.dominio.seguridad.Tarea;
 import edu.unl.cc.patitas_suite.dominio.seguridad.TipoDeTarea;
 import edu.unl.cc.patitas_suite.excepciones.EntityNotFoundException;
+import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.persistence.Query;
 import jakarta.validation.constraints.NotNull;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-public class RepositorioDeTareas {
+@Stateless
+public class RepositorioDeTareas implements Serializable {
     @Inject
     private ServicioDeCrudGenerico servicioCrud;
 

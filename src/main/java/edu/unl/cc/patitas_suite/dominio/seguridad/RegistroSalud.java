@@ -3,10 +3,11 @@ package edu.unl.cc.patitas_suite.dominio.seguridad;
 import edu.unl.cc.patitas_suite.dominio.comun.Usuario;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
-public class RegistroSalud {
+public class RegistroSalud implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

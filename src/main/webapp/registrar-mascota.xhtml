@@ -3,131 +3,188 @@
       xmlns:h="jakarta.faces.html"
       xmlns:f="jakarta.faces.core"
       xmlns:ui="jakarta.faces.facelets"
-      xmlns:p="primefaces">
-<f:view xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:h="http://xmlns.jcp.org/jsf/html"
-        xmlns:p="http://primefaces.org/ui"
-        xmlns:f="http://xmlns.jcp.org/jsf/core">
-<h:head>
-    <title>Registrar Mascota</title>
-    <meta charset="UTF-8" />
-    <style>
-        body {
-            margin: 0;
-            font-family: "Segoe UI", sans-serif;
-            background-color: #cfe7b6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+      xmlns:p="http://primefaces.org/ui">
+<f:view>
+    <h:head>
+        <title>Registrar Mascota</title>
+        <meta charset="UTF-8" />
+        <style>
+            body {
+                margin: 0;
+                font-family: "Segoe UI", sans-serif;
+                background-color: #cfe7b6;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                flex-direction: column;
+            }
 
-        .form-container {
-            background-color: white;
-            padding: 30px 40px;
-            border-radius: 20px;
-            box-shadow: 8px 8px 0 #b8d7a4;
-            width: 420px;
-        }
+            .main-wrapper {
+                display: flex;
+                gap: 40px;
+                background-color: white;
+                padding: 30px 40px;
+                border-radius: 20px;
+                box-shadow: 8px 8px 0 #b8d7a4;
+            }
 
-        h2 {
-            text-align: center;
-            margin-bottom: 25px;
-            color: #7fa450;
-            font-size: 22px;
-        }
+            .form-container {
+                width: 400px;
+            }
 
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: bold;
-            color: #555;
-        }
+            h2 {
+                text-align: center;
+                margin-bottom: 25px;
+                color: #7fa450;
+                font-size: 22px;
+            }
 
-        input, select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 18px;
-            border: 1px solid #b8d7a4;
-            border-radius: 8px;
-            background-color: #f9fff4;
-            font-size: 14px;
-        }
+            label {
+                display: block;
+                margin-bottom: 6px;
+                font-weight: bold;
+                color: #555;
+            }
 
-        .button {
-            width: 100%;
-            padding: 12px;
-            background-color: #cfe7b6;
-            color: black;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+            .custom-input, .custom-area, .custom-select {
+                width: 100%;
+                margin-bottom: 18px;
+            }
 
-        .button:hover {
-            background-color: #b8d7a4;
-        }
+            .login-btn {
+                width: 100%;
+                padding: 12px;
+                background-color: #cfe7b6;
+                color: black;
+                border: none;
+                border-radius: 12px;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                margin-top: 10px;
+            }
 
-    </style>
-</h:head>
-<h:body>
-<div class="form-container">
-    <h2>Registrar Nueva Mascota</h2>
-    <div class="register-container">
+            .login-btn:hover {
+                background-color: #b8d7a4;
+            }
+        </style>
+    </h:head>
+    <h:body>
 
-    <h:form id="registroForm">
+        <!-- Mensajes fuera de formularios -->
         <p:growl id="growl" showDetail="true" autoUpdate="true" />
-        <label for="nombre">Nombre de la mascota</label>
-        <p:inputText id="nombre" value=""
-                     placeholder="Nombre de la Mascota"
-                     required="true"
-                     requiredMessage="El nombre es obligatorio"
-                     styleClass="input-field"/>
-        <p:message for="nombre" />
 
-        <div class="input-group">
-            <label for="especie">Especie</label>
-            <p:inputText id="especie" value=""
-                         placeholder="ej. Perro/gato/reptil"
-                         required="true"
-                         requiredMessage="La especie es obligatoria"
-                         styleClass="custom-input"/>
-            <p:message for="especie" />
+        <div class="main-wrapper">
+
+            <!-- FORMULARIO MASCOTA -->
+            <div class="form-container">
+                <h2>Registrar Nueva Mascota</h2>
+                <h:form id="registroForm">
+                    <div style="margin-bottom: 16px;">
+                        <label for="nombre">Nombre de la mascota</label>
+                        <p:inputText id="nombre" value="#{registrarMascotaBean.nombreMascota}"
+                                     placeholder="Nombre de la Mascota"
+                                     required="true"
+                                     requiredMessage="El nombre es obligatorio"
+                                     style="width: 100%;" />
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <label for="especie">Especie</label>
+                        <p:inputText id="especie" value="#{registrarMascotaBean.especie}"
+                                     placeholder="ej. Perro/gato/reptil"
+                                     required="true"
+                                     requiredMessage="La especie es obligatoria"
+                                     style="width: 100%;" />
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <label for="edad">Edad</label>
+                        <p:inputText id="edad" value=""
+                                     placeholder="ej. 15"
+                                     required="true"
+                                     requiredMessage="La Edad es obligatoria"
+                                     style="width: 100%;" />
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <label for="peso">Peso (kg)</label>
+                        <p:inputText id="peso" value="#{registrarMascotaBean.peso}"
+                                     placeholder="ej. 12.5"
+                                     required="true"
+                                     requiredMessage="El peso es obligatorio"
+                                     style="width: 100%;" />
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <label for="habitacion">Número de habitación</label>
+                        <p:selectOneMenu id="habitacion"
+                                         value="#{registrarMascotaBean.habitacionSeleccionadaID}"
+                                         converter="javax.faces.Long"
+                                         style="width: 100%;">
+                            <f:selectItem itemLabel="Seleccione una habitación" itemValue="#{null}" />
+                            <f:selectItems value="#{registrarMascotaBean.obtenerHabitacionesDisponibles()}"
+                                           var="hab"
+                                           itemLabel="Habitacion: #{hab.id}"
+                                           itemValue="#{hab.id}" />
+                        </p:selectOneMenu>
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <label for="empleado">Empleado asignado</label>
+                        <p:selectOneMenu id="empleado"
+                                         value="#{registrarMascotaBean.empleadoAsignadoID}"
+                                         converter="javax.faces.Long"
+                                         style="width: 100%;">
+                            <f:selectItem itemLabel="Seleccione un Empleado" itemValue="#{null}" />
+                            <f:selectItems value="#{registrarMascotaBean.obtenerEmpleados()}"
+                                           var="emp"
+                                           itemLabel="#{emp.nombre}"
+                                           itemValue="#{emp.id}" />
+                        </p:selectOneMenu>
+                    </div>
+                </h:form>
+            </div>
+
+            <!-- FORMULARIO CLIENTE -->
+            <div class="form-container">
+                <h2>Registrar Cliente</h2>
+                <h:form id="clienteForm">
+                    <label for="clienteNombre">Nombre del cliente</label>
+                    <p:inputText id="clienteNombre" value="#{registrarMascotaBean.nombreCliente}"
+                                 placeholder="ej. Jessenia Fuentes"
+                                 styleClass="custom-input"/>
+
+                    <label for="telefono">Número de contacto</label>
+                    <p:inputText id="telefono" value="#{registrarMascotaBean.telefono}"
+                                 placeholder="0999999999"
+                                 styleClass="custom-input"/>
+
+                    <label for="direccion">Dirección</label>
+                    <p:inputTextarea id="direccion" value="#{registrarMascotaBean.direccion}"
+                                     rows="3"
+                                     placeholder="Calle 123, Ciudad"
+                                     style="resize: none;"
+                                     styleClass="custom-area"/>
+                    <!--
+                    <label for="metodoPago">Metodo de pago</label>
+                    <p:selectOneMenu id="metodoPago" value="" styleClass="custom-select">
+                        <f:selectItem itemLabel="Seleccione una opción" itemValue="" />
+                        <f:selectItem itemLabel="Transferencia" itemValue="transferencia" />
+                        <f:selectItem itemLabel="Efectivo" itemValue="efectivo" />
+                    </p:selectOneMenu>
+                    -->
+                    <!-- Botón  -->
+                    <p:commandButton value="Registrar"
+                                     action="#{registrarMascotaBean.registrarMascota()}"
+                                     update=":growl"
+                                     process="@form"
+                                     styleClass="login-btn"
+                                     style="background-color: #a2cb6d; color: black;" />
+                </h:form>
+            </div>
         </div>
-        <div class="input-group">
-            <label for="edad">Edad</label>
-            <p:inputText id="edad" value=""
-                         placeholder="ej. 15"
-                         required="true"
-                         requiredMessage="La Edad es obligatoria"
-                         styleClass="custom-input"/>
-        </div>
-        <label for="habitacion">Número de habitación</label>
-        <select id="habitacion" name="habitacion">
-            <option value="">Seleccione una habitación</option>
-            <option value="101">101</option>
-            <option value="102">102</option>
-            <!-- Agrega más habitaciones aquí -->
-        </select>
-
-        <label for="empleado">Empleado asignado</label>
-        <select id="empleado" name="empleado">
-            <option value="">Seleccione un empleado</option>
-            <option value="Miguel Armas">Miguel Armas</option>
-            <option value="Domenica Rojas">Domenica Rojas</option>
-            <!-- Agrega más empleados aquí -->
-        </select>
-
-        <p:commandButton value="Registrar"
-                         action="#{empleadoBean.registrarMascota()}"
-                         update="growl @form"
-                         process="@form"
-                         styleClass="login-btn"/>
-    </h:form>
-    </div>
-</div>
-</h:body>
+    </h:body>
 </f:view>
 </html>

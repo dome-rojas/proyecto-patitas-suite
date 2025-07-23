@@ -15,11 +15,12 @@ import jakarta.servlet.ServletException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.io.Serializable;
 import java.util.logging.Logger;
 
 @Named
 @RequestScoped
-public class AutenticacionBean {
+public class AutenticacionBean implements Serializable {
     private static Logger logger = Logger.getLogger(AutenticacionBean.class.getName());
 
     @NotNull
@@ -37,6 +38,7 @@ public class AutenticacionBean {
     //@Inject
     //private FacesContext facesContext;
 
+
     public String login(){
         logger.info("Logging in with username: " + nombreUsuario);
         logger.info("Logging in with password: " + clave);
@@ -52,11 +54,10 @@ public class AutenticacionBean {
             System.out.println("--------------> userSession Login: " + sesionDeUsuario.getUsuario());
             sesionDeUsuario.postLogin(usuario);
             if(usuario.esPrimerIngreso()){
-                usuario.setPrimerIngreso(false);
                 FacesUtil.addSuccessMessageAndKeep("Bienvenido al sistema. Por favor, actualice su información.");
-                return ("cambiar-contraseña.xhtml?faces-redirect=true");
+                return ("cambiar-clave.xhtml?faces-redirect=true");
             }
-            return (usuario.getRol().toString().toLowerCase()+"-dashboard.xhtml?faces-redirect=true");
+            return (usuario.getRol().getNombre().toLowerCase()+"-dashboard.xhtml?faces-redirect=true");
         } catch (Exception e) {
             FacesUtil.addMessage(FacesMessage.SEVERITY_ERROR,  e.getMessage(), null);
             return null;

@@ -16,6 +16,12 @@
     <logging  traceSpecification="JPA=all" />
 
     <!-- Modificar el que ayuda a configurar los proveedores de persistencia-->
+    <jpa defaultPersistenceProvider="org.eclipse.persistence.jpa.PersistenceProvider">
+        <defaultProperties>
+            <property name="eclipselink.ddl-generation" value="create-tables"/>
+            <property name="eclipselink.target-database" value="MySQL"/>
+        </defaultProperties>
+    </jpa>
     <!--
     <jpa defaultPersistenceProvider="org.hibernate.jpa.HibernatePersistenceProvider">
         <defaultProperties>
@@ -30,19 +36,11 @@
         <jdbcDriver id="mysql-driver" libraryRef="MySqlJDBCLib"/>
         <properties serverName="${db.server.name}"
                     portNumber="${db.port.number}"
-                    databaseName="patitas-suite"
+                    databaseName="patitas_suite"
                     user="patitas_admin"
-                    password="12345678"
+                    password="p12345678"
                     useSSL="false" serverTimezone="UTC"/>
-        <!--
-        <properties.postgresql
-                serverName="${db.server.name}"
-                portNumber="${db.port.number}"
-                databaseName="jbrew"
-                user="jbrewuser"
-                password="jbrewUser2525"
-        />
-        -->
+
     </dataSource>
 
     <!-- Referencia al driver JDBC de MySQL -->

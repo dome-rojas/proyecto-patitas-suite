@@ -10,6 +10,10 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@NamedQuery(
+        name = "Rol.findAll",
+        query = "SELECT r FROM Rol r"
+)
 public class Rol implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

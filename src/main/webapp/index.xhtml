@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+<h:head>
+    <title>Bienvenido - Patitas Suite</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- Fuentes: Inter (título) + Poppins (resto) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700family=Poppins:wght@600display=swap" rel="stylesheet" />
+
+    <style>
+        body {
+            margin: 0;
+            background-color: #c7e2ae;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            position: relative;
+            background-color: white;
+            border-radius: 30px;
+            padding: 50px 40px 40px 40px;
+            text-align: center;
+            max-width: 900px;
+            width: 90%;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Botón con verde más oscuro (#2E5E2A) */
+        .boton-inicio {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #a2cb6d;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Efecto hover: verde un poco más claro (#3A6B35) */
+        .boton-inicio:hover {
+            background-color: #3A6B35;
+        }
+
+
+        .titulo-bienvenida {
+            font-family: 'Inter', sans-serif;
+            font-size: 48px;
+            color: #a2cb6d;
+            font-weight: 700; /
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            line-height: 1.2;
+        }
+
+        .subtitulo {
+            font-size: 18px;
+            color: #2c2c2c;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .logo {
+            width: 380px;
+            max-width: 100%;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        @media (max-width: 768px) {
+            .titulo-bienvenida {
+                font-size: 36px;
+            }
+
+            .logo {
+                width: 280px;
+            }
+
+            .card {
+                padding: 30px 25px;
+            }
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <div class="card">
+        <h:link outcome="login.xhtml?faces-redirect=true" styleClass="boton-inicio">Iniciar Sesión</h:link>
+
+        <!-- Título modificado: "Bienvenido, Administrador" -->
+        <h:outputText value="Bienvenido" styleClass="titulo-bienvenida" />
+
+        <div class="subtitulo">Sistema de Gestión de Hotel para Mascotas</div>
+        <img src="images/perrito.jpg" alt="Logo Patitas Suite" class="logo" />
+    </div>
+</h:body>
+</html>

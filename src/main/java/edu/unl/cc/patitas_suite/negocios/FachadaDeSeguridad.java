@@ -25,6 +25,12 @@ public class FachadaDeSeguridad implements Serializable {
     @Inject
     private RepositorioDeRoles repositorioDeRoles;
 
+    public Rol createRol(Rol rol)  {
+            repositorioDeRoles.find(rol.getNombre());
+            Rol rolPersisted = repositorioDeRoles.save(rol);
+            return rolPersisted;
+    }
+
     public Usuario create(Usuario usuario) throws Exception {
         String pwdEncrypted = GestorDeCifrado.encrypt(usuario.getClave());
         usuario.setClave(pwdEncrypted);
@@ -52,9 +58,15 @@ public class FachadaDeSeguridad implements Serializable {
         }
         return repositorioDeUsuarios.save(usuario);
     }
+    public List<Rol> findAllRoles() throws EntityNotFoundException {
+        return  repositorioDeRoles.allRoles();
+    }
 
     public Usuario find(Long id) throws EntityNotFoundException {
         return repositorioDeUsuarios.find(id);
+    }
+    public Rol findRolId(Long id) throws EntityNotFoundException {
+        return repositorioDeRoles.findRolId(id);
     }
 
     public Usuario authenticate(String nombre, String clave) throws CredentialInvalidException, EncryptorException {

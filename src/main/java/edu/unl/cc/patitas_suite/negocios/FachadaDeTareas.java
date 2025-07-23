@@ -4,16 +4,17 @@ import edu.unl.cc.patitas_suite.dominio.seguridad.Tarea;
 import edu.unl.cc.patitas_suite.dominio.seguridad.TipoDeTarea;
 import edu.unl.cc.patitas_suite.excepciones.EntityNotFoundException;
 import edu.unl.cc.patitas_suite.negocios.servicios.RepositorioDeTareas;
+import jakarta.ejb.Stateless;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-@Named
-@RequestScoped
-public class FachadaDeTareas {
+@Stateless
+public class FachadaDeTareas implements Serializable {
 
     @Inject
     private RepositorioDeTareas repositorioDeTareas;

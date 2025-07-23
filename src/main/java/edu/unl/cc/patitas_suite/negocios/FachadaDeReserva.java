@@ -3,16 +3,17 @@ package edu.unl.cc.patitas_suite.negocios;
 import edu.unl.cc.patitas_suite.dominio.seguridad.Reserva;
 import edu.unl.cc.patitas_suite.excepciones.EntityNotFoundException;
 import edu.unl.cc.patitas_suite.negocios.servicios.RepositorioDeReservas;
+import jakarta.ejb.Stateless;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-@Named
-@RequestScoped
-public class FachadaDeReserva {
+@Stateless
+public class FachadaDeReserva implements Serializable {
 
     @Inject
     private RepositorioDeReservas repositorioDeReservas;

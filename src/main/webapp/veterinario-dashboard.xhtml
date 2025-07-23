@@ -9,20 +9,21 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/primeicons@6.0.0/primeicons.css" />
 
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #c7e2ae;
+            margin: 0;
+            font-family: "Segoe UI", sans-serif;
+            background-color: #d6ecc3;
             padding: 20px;
             box-sizing: border-box;
         }
 
         .dashboard-card {
-            background-color: white;
+            background-color: #fff;
             border-radius: 1.5rem;
-            box-shadow: 0 10px 15px -3px #aba8a6,
-            0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            box-shadow: 8px 8px 0 #b8d7a4;
             border: 1px solid white;
             max-width: 1200px;
             margin: 0 auto;
@@ -56,13 +57,13 @@
 
         .header-text p {
             font-size: 1rem;
-            color: #545454;
+            color: #111;
         }
 
         .section-title {
             font-size: 1.25rem;
             font-weight: 600;
-            color: #545454;
+            color: #111;
             margin-right: auto;
             text-align: left;
             display: block;
@@ -79,13 +80,10 @@
             font-size: 1rem;
             background-color: #c7e2ae;
             border: none;
-            color: white;
-            font-weight: bold;
+            color: #111;
             border-radius: 9999px;
             padding: 0.75rem 1.5rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-            text-shadow: 1px 1px 1px #2c2c2c;
-            transition: background-color 0.3s ease;
+            box-shadow: 3px 3px 0 #d6ecc3;
             margin-right: auto;
             cursor: pointer;
             display: inline-flex;
@@ -112,7 +110,7 @@
             display: flex;
             align-items: center;
             gap: 1rem;
-            background-color: #f4dcb2;
+            background-color: #d6ecc3;
             padding: 1rem;
             border-radius: 0.5rem;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
@@ -127,7 +125,7 @@
 
         .resumen-label {
             font-size: 1rem;
-            color: #545454;
+            color: #111;
             margin-right: 0.5rem;
         }
 
@@ -137,14 +135,14 @@
 
         .custom-tareas-table.ui-datatable thead th {
             background-color: #dde7ab !important;
-            color: #545454 !important;
+            color: #111 !important;
             padding: 1rem !important;
             text-align: center !important;
             border-bottom: 2px solid white !important;
         }
 
         .custom-tareas-table.ui-datatable tbody tr {
-            background-color: white !important;
+            background-color: #fff !important;
             transition: background-color 0.3s ease !important;
             cursor: pointer !important;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
@@ -155,7 +153,7 @@
         }
         .custom-tareas-table.ui-datatable tbody td {
             padding: 1rem !important;
-            color: #545454 !important;
+            color: #111 !important;
             word-wrap: break-word !important;
             overflow-wrap: break-word !important;
         }
@@ -209,7 +207,7 @@
                                      styleClass="ui-button-primary" />
 
                     <p:commandButton value="🔄 Cerrar Sesión"
-                                     action="#{autenticacionBean.logout}"
+                                     action="#{loginBean.logout}"
                                      styleClass="ui-button-secondary"/>
                 </div>
             </div>

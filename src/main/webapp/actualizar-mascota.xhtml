@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Actualizar Mascota</title>
+    <style>
+        body {
+            background-color: #c7e2ae;
+            font-family: 'Segoe UI', sans-serif;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            padding: 1.5rem; /* Reducido para hacerlo más compacto */
+            width: 30%; /* Cambiado de 40% a 30% */
+            min-width: 260px; /* Ajustado para que no se vea muy chico en pantallas pequeñas */
+            margin: auto;
+            box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 1.6rem; /* Un poco más pequeño */
+            font-weight: bold;
+            color: #a2cb6d;
+            margin-bottom: 1rem; /* Menos espacio debajo del título */
+        }
+
+        .field {
+            margin-bottom: 0.8rem; /* Menos espacio entre campos */
+            text-align: left;
+        }
+
+        .field label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+            color: #444;
+        }
+
+        .readonly-field {
+            display: block;
+            padding: 0.4rem; /* Un poco menos de padding */
+            background-color: #f4f4f4;
+            border-radius: 5px;
+        }
+
+        .editable-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .editable-field {
+            flex: 1;
+        }
+
+        .mod-button {
+            background-color: #4CAF50 !important;
+            border: none;
+            color: white !important;
+            padding: 0.3rem 0.6rem !important;
+            border-radius: 4px !important;
+            font-size: 0.75rem !important;
+            height: 100%;
+        }
+
+        .save-button {
+            background-color: #a2cb6d !important;
+            border: none;
+            color: white !important;
+            padding: 0.6rem 1rem !important;
+            border-radius: 6px !important;
+            font-size: 0.9rem !important;
+            transition: background-color 0.3s ease;
+        }
+
+        .save-button:hover {
+            background-color: #91b65f !important;
+        }
+
+        .button-container {
+            margin-top: 1.5rem;
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <div class="form-container">
+        <h1>Actualizar Datos de Mascota</h1>
+
+        <h:form>
+            <!-- Nombre (solo mostrar) -->
+            <div class="field">
+                <label>Nombre:</label>
+                <h:outputText value="#{editarMascotaBean.mascotaSeleccionada.nombre}"
+                              disabled="true"
+                              styleClass="readonly-field"/>
+            </div>
+
+            <!-- Especie (solo mostrar) -->
+            <div class="field">
+                <label>Especie:</label>
+                <h:outputText value="#{editarMascotaBean.mascotaSeleccionada.especie}"
+                              styleClass="readonly-field"/>
+            </div>
+
+            <!-- Edad -->
+            <div class="field">
+                <label>Edad:</label>
+                <div class="editable-group">
+                    <p:inputText value="#{editarMascotaBean.mascotaSeleccionada.fechaNacimiento}"
+                                 styleClass="editable-field"/>
+                    <p:commandButton value="Modificar" styleClass="mod-button" icon="pi pi-pencil"/>
+                </div>
+            </div>
+
+            <!-- Peso -->
+            <div class="field">
+                <label>Peso:</label>
+                <div class="editable-group">
+                    <p:inputText value="#{editarMascotaBean.mascotaSeleccionada.fechaNacimiento}"
+                                 styleClass="editable-field"/>
+                    <p:commandButton value="Modificar" styleClass="mod-button" icon="pi pi-pencil"/>
+                </div>
+            </div>
+
+            <!-- Número de habitación -->
+            <div class="field">
+                <label>Número de habitación:</label>
+                <p:selectOneMenu id="habitacion"
+                                 value="#{editarMascotaBean.mascotaSeleccionada.habitacion.id}"
+                                 converter="javax.faces.Long"
+                                 style="width: 100%;">
+                    <f:selectItem itemLabel="Seleccione una habitación" itemValue="#{null}" />
+                    <f:selectItems value="#{editarMascotaBean.habitacionesDisponibles}"
+                                   var="hab"
+                                   itemLabel="Habitacion: #{hab.id}"
+                                   itemValue="#{hab.id}" />
+                </p:selectOneMenu>
+            </div>
+
+            <!-- Empleado asignado -->
+            <div class="field">
+                <label>Empleado asignado:</label>
+                <p:selectOneMenu id="empleado"
+                                 value="#{editarMascotaBean.mascotaSeleccionada.cuidador.id}"
+                                 converter="javax.faces.Long"
+                                 style="width: 100%;">
+                    <f:selectItem itemLabel="Seleccione un Empleado" itemValue="#{null}" />
+                    <f:selectItems value="#{editarMascotaBean.empleadosDisponibles}"
+                                   var="emp"
+                                   itemLabel="#{emp.nombre}"
+                                   itemValue="#{emp.id}" />
+                </p:selectOneMenu>
+            </div>
+
+            <!-- Botón guardar -->
+            <div class="button-container">
+                <p:commandButton value="Guardar Cambios"
+                                 action="#{editarMascotaBean.actualizarMascota()}"
+                                 icon="pi pi-save"
+                                 update="@form"
+                                 styleClass="save-button"/>
+            </div>
+        </h:form>
+    </div>
+</h:body>
+
+</html>

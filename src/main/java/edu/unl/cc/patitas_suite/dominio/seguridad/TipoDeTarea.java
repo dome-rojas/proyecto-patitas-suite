@@ -4,18 +4,18 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
+import java.io.Serializable;
+
 @Entity
 @NamedQueries({
         @NamedQuery(
                 name = "TipoDeTarea.findLikeName",
-                query = "SELECT t FROM TipoDeTarea t WHERE LOWER(t.nombre) LIKE :nombre"
-        ),
+                query = "SELECT t FROM TipoDeTarea t WHERE LOWER(t.nombre) LIKE :nombre"),
         @NamedQuery(
                 name = "TipoDeTarea.findAll",
-                query = "SELECT t FROM TipoDeTarea t"
-        )
+                query = "SELECT t FROM TipoDeTarea t")
 })
-public class TipoDeTarea {
+public class TipoDeTarea implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
