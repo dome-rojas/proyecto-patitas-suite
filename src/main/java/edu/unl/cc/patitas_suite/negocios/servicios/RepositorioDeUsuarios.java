@@ -9,12 +9,13 @@ import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.validation.constraints.NotNull;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Stateless
-public class RepositorioDeUsuarios {
+public class RepositorioDeUsuarios implements Serializable {
 
     //Se inyecta la dependencia con CrudGenericService
     @Inject
@@ -60,9 +61,11 @@ public class RepositorioDeUsuarios {
         params.put("nombreRol", nombreRol.toLowerCase());
         return servicioCrud.findWithNamedQuery("Usuario.findByRol", params);
     }
+
     public List<Tarea> allTareas() throws EntityNotFoundException {
-        return servicioCrud.findWithNamedQuery("Usuario.findAll", new HashMap<>());
+        return servicioCrud.findWithNamedQuery("Usuario.findAllTareas", new HashMap<>());
     }
+
     public List<Usuario> findAllUsuarios() {
         return servicioCrud.findWithNamedQuery("Usuario.findAll", new HashMap<>());
     }

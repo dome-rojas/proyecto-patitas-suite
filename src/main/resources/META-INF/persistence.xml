@@ -14,6 +14,11 @@
             <property name="jakarta.persistence.jdbc.user" value="jbrewuser"/>
             <property name="jakarta.persistence.jdbc.password" value="jbrewUser2525"/>
             -->
+            <property name="jakarta.persistence.jdbc.url"
+                      value="jdbc:mysql://patitas-suite-mysql-db:3306/patitas_suite?autoReconnect=true&amp;failOverReadOnly=false&amp;maxReconnects=10"/>
+            <property name="eclipselink.connection-pool.initial" value="1"/>
+            <property name="eclipselink.connection-pool.min" value="1"/>
+            <property name="eclipselink.connection-pool.max" value="1"/>
             <!-- FIN CONFIGURACION DE CONEXION A LA BD -->
 
             <!-- 1. Configuración de generación / actualización de tablas (esquema de BD) -->
@@ -21,7 +26,7 @@
             <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
             <!-- Configuración de EclipseLink values: none, drop-and-create-tables, create-tables, create-or-extend-tables -->
             <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>
-            <!-- database = ejecuta los comandos DDL directamente en la base de datos -->
+            <!--database = ejecuta los comandos DDL directamente en la base de datos -->
             <property name="eclipselink.ddl-generation.output-mode" value="database"/>
 
             <!-- 2. Cargar script de inicialización de la BD -->
@@ -32,6 +37,11 @@
             <property name="eclipselink.logging.parameters" value="true"/>
             <property name="eclipselink.logging.level" value="FINE"/>
 
+
+            <property name="eclipselink.jdbc.read-connections.min" value="1"/>
+            <property name="eclipselink.jdbc.read-connections.max" value="1"/>
+            <property name="eclipselink.jdbc.retry" value="5"/> <!-- Intentos adicionales -->
+            <property name="eclipselink.connection-retry.retry-delay" value="10000"/> <!-- 10 seg entre intentos -->
             <!-- Caché (opcional) -->
             <property name="eclipselink.cache.shared.default" value="false"/>
 

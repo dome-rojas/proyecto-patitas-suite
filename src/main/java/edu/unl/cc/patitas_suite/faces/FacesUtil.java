@@ -37,6 +37,10 @@ public class FacesUtil {
         addMessageAndKeep(FacesMessage.SEVERITY_ERROR, null, detail);
     }
 
+        public static void agregarInfo(String mensaje) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, mensaje, null));
+        }
     /**
      * Add messages in the same view
      * @param severity a

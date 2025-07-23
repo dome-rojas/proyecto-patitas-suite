@@ -9,12 +9,13 @@ import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.validation.constraints.NotNull;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Stateless
-public class RepositorioDeClientes {
+public class RepositorioDeClientes implements Serializable {
     @Inject
     private ServicioDeCrudGenerico servicioCrud;
 

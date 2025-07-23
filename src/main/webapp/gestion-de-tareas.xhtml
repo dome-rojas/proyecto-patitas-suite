@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Gestión de Tareas</title>
+    <meta charset="UTF-8"/>
+    <style>
+        body {
+            background-color: #d6ecc3;
+            font-family: "Segoe UI", sans-serif;
+            padding: 2rem;
+        }
+
+        .contenedor {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            box-shadow: 8px 8px 0 #b8d7a4;
+            border: 1px solid white;
+        }
+
+        .titulo {
+            color: #a2cb6d;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            text-shadow: 1px 1px #999;
+            margin-bottom: 1rem;
+        }
+
+        .subtitulo {
+            text-align: center;
+            color: #333;
+            margin-bottom: 2rem;
+        }
+
+        .formulario {
+            background-color: #f6fff3;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .formulario .ui-inputfield,
+        .formulario .ui-inputtextarea {
+            width: 100% !important;
+        }
+
+        .formulario .ui-inputtextarea {
+            resize: none !important;
+        }
+
+        .boton-verde {
+            background-color: #c7e2ae !important;
+            color: #111 !important;
+            border: none !important;
+            border-radius: 9999px !important;
+            padding: 0.75rem 1.5rem !important;
+            box-shadow: 3px 3px 0 #d6ecc3 !important;
+            font-weight: bold !important;
+        }
+
+        .boton-verde:hover {
+            background-color: #a2cb6d !important;
+        }
+
+        .custom-tareas-table.ui-datatable thead th {
+            background-color: #c7e2ae !important;
+            color: #111 !important;
+            padding: 1rem !important;
+            text-align: center !important;
+            border-bottom: 2px solid white !important;
+        }
+
+        .custom-tareas-table.ui-datatable tbody tr {
+            background-color: #fff !important;
+            transition: background-color 0.3s ease !important;
+        }
+
+        .custom-tareas-table.ui-datatable tbody tr:hover {
+            background-color: #eef2d8 !important;
+        }
+
+        .custom-tareas-table.ui-datatable tbody td {
+            padding: 1rem !important;
+            color: #111 !important;
+        }
+
+        .acciones-btns .p-button {
+            margin-right: 0.5rem;
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <div class="contenedor">
+        <h1 class="titulo">Gestión de Tareas</h1>
+        <p class="subtitulo">Crea, edita o elimina actividades asignadas a los empleados</p>
+
+        <!-- 📋 Formulario -->
+        <h:form id="formAgregar" styleClass="formulario">
+            <p:panel header="Agregar Nueva Tarea">
+                <p:outputLabel for="nombreTarea" value="Nombre de la tarea:" />
+                <p:inputText id="nombreTarea" value="#{tareaBean.nuevaTarea.nombre}" required="true" />
+
+                <p:outputLabel for="descTarea" value="Descripción de la tarea:" style="margin-top:1rem; display:block;" />
+                <p:inputTextarea id="descTarea" value="#{tareaBean.nuevaTarea.descripcion}" autoResize="false" rows="3" required="true" />
+
+                <p:commandButton value="Agregar Tarea"
+                                 icon="pi pi-plus"
+                                 actionListener="#{tareaBean.agregarTarea}"
+                                 update="tablaTareas formAgregar"
+                                 styleClass="boton-verde"
+                                 style="margin-top:1.5rem;" />
+            </p:panel>
+        </h:form>
+
+        <!-- 📄 Tabla de tareas -->
+        <h:form id="tablaTareas">
+            <p:dataTable value="#{tareaBean.listaTareas}" var="tarea"
+                         emptyMessage="No hay tareas registradas."
+                         styleClass="custom-tareas-table"
+                         responsiveLayout="scroll">
+                <p:column headerText="Nombre">
+                    <h:outputText value="#{tarea.nombre}" />
+                </p:column>
+
+                <p:column headerText="Descripción">
+                    <h:outputText value="#{tarea.descripcion}" />
+                </p:column>
+
+                <p:column headerText="Acciones">
+                    <div class="acciones-btns">
+                        <p:commandButton icon="pi pi-pencil"
+                                         title="Editar"
+                                         actionListener="#{tareaBean.editarTarea(tarea)}"
+                                         update="tablaTareas"
+                                         styleClass="p-button-warning" />
+
+                        <p:commandButton icon="pi pi-trash"
+                                         title="Eliminar"
+                                         actionListener="#{tareaBean.eliminarTarea(tarea)}"
+                                         update="tablaTareas"
+                                         styleClass="p-button-danger" />
+                    </div>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </div>
+</h:body>
+</html>

@@ -4,6 +4,7 @@ import edu.unl.cc.patitas_suite.dominio.comun.Usuario;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
@@ -21,7 +22,7 @@ import java.time.LocalDate;
                 name = "Reserva.findInRange",
                 query = "SELECT r FROM Reserva r WHERE r.fechaEntrada BETWEEN :inicio AND :fin")
 })
-public class Reserva {
+public class Reserva implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

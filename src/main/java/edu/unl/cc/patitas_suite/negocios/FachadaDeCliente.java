@@ -4,14 +4,15 @@ import edu.unl.cc.patitas_suite.dominio.seguridad.Cliente;
 import edu.unl.cc.patitas_suite.dominio.seguridad.Mascota;
 import edu.unl.cc.patitas_suite.excepciones.EntityNotFoundException;
 import edu.unl.cc.patitas_suite.negocios.servicios.RepositorioDeClientes;
+import jakarta.ejb.Stateless;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
+import java.io.Serializable;
 import java.util.List;
-@Named
-@RequestScoped
-public class FachadaDeCliente {
+@Stateless
+public class FachadaDeCliente implements Serializable {
 
     @Inject
     private RepositorioDeClientes repositorioDeClientes;

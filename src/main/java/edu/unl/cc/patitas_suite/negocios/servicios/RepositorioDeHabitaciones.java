@@ -3,16 +3,18 @@ package edu.unl.cc.patitas_suite.negocios.servicios;
 import edu.unl.cc.patitas_suite.dominio.seguridad.Cliente;
 import edu.unl.cc.patitas_suite.dominio.seguridad.Habitacion;
 import edu.unl.cc.patitas_suite.excepciones.EntityNotFoundException;
+import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.validation.constraints.NotNull;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-public class RepositorioDeHabitaciones {
+@Stateless
+public class RepositorioDeHabitaciones implements Serializable {
     @Inject
     private ServicioDeCrudGenerico servicioCrud;
 

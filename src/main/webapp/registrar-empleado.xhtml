@@ -91,7 +91,7 @@
 
                 <div class="input-group">
                     <label for="nombre">Nombre</label>
-                    <p:inputText id="nombre" value="#{empleadoBean.nombre}"
+                    <p:inputText id="nombre" value="#{registrarUsuarioBean.nombre}"
                                  placeholder="ej. Miguel Armas"
                                  required="true"
                                  requiredMessage="El nombre es obligatorio"/>
@@ -100,7 +100,7 @@
 
                 <div class="input-group">
                     <label for="cedula">Cédula</label>
-                    <p:inputText id="cedula" value="#{empleadoBean.cedula}"
+                    <p:inputText id="cedula" value="#{registrarUsuarioBean.cedula}"
                                  placeholder="ej. 1103203889"
                                  required="true"
                                  requiredMessage="La cedula es obligatoria"/>
@@ -109,20 +109,34 @@
 
                 <div class="input-group">
                     <label for="telefono">Teléfono</label>
-                    <p:inputText id="telefono" value=""
+                    <p:inputText id="telefono" value="#{registrarUsuarioBean.telefono}"
                                  placeholder="ej. 0979448157"/>
                     <p:message for="telefono" />
                 </div>
 
                 <div class="input-group">
                     <label for="correo">Correo Electrónico</label>
-                    <p:inputText id="correo" value=""
+                    <p:inputText id="correo" value="#{registrarUsuarioBean.correo}"
                                  placeholder="ej. ejemplo@email.com"/>
                     <p:message for="correo" />
                 </div>
 
+                <div style="margin-bottom: 16px;">
+                    <label for="rol">Rol del Empleado</label>
+                    <p:selectOneMenu id="rol"
+                                     value="#{registrarUsuarioBean.rolSeleccionadoId}"
+                                     converter="javax.faces.Long"
+                                     style="width: 100%;">
+                        <f:selectItem itemLabel="Seleccione un Rol" itemValue="#{null}" />
+                        <f:selectItems value="#{registrarUsuarioBean.rolesDisponibles}"
+                                       var="rol"
+                                       itemLabel="#{rol.nombre}"
+                                       itemValue="#{rol.id}" />
+                    </p:selectOneMenu>
+                </div>
+
                 <p:commandButton value="Registrar"
-                                 action="#{empleadoBean.registrar}"
+                                 action="#{registrarUsuarioBean.registrar()}"
                                  update="growl registroForm"
                                  process="@form"
                                  styleClass="button" />
