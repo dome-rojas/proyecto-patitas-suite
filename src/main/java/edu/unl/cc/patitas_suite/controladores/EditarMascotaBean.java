@@ -1,6 +1,5 @@
 package edu.unl.cc.patitas_suite.controladores;
 
-import edu.unl.cc.patitas_suite.controladores.seguridad.SesionDeUsuario;
 import edu.unl.cc.patitas_suite.dominio.comun.Usuario;
 import edu.unl.cc.patitas_suite.dominio.seguridad.Habitacion;
 import edu.unl.cc.patitas_suite.dominio.seguridad.Mascota;
@@ -23,23 +22,30 @@ public class EditarMascotaBean implements Serializable {
 
     @Inject
     private FachadaDeMascota fachadaDeMascota;
-    @Named
-    @Inject
-    private SesionDeUsuario SesionDeUsuario;
+
+    private Usuario usuario;
 
 
     private List<Habitacion> habitacionesDisponibles;
     private List<Usuario> empleadosDisponibles;
 
-    @Named
     @Inject
     private RegistrarMascotaBean registrarMascotaBean;
 
     @PostConstruct
-    public void init() throws EntityNotFoundException {
+    public void init() {
+        this.usuario = (Usuario) FacesContext.getCurrentInstance()
+                .getExternalContext()
+                .getSessionMap()
+                .get("usuario");
+
         this.empleadosDisponibles = registrarMascotaBean.obtenerEmpleados();
         this.habitacionesDisponibles = registrarMascotaBean.obtenerHabitacionesDisponibles();
-        this.mascotaSeleccionada = fachadaDeMascota.find(mascotaSeleccionada.getId());
+        try{
+            this.mascotaSeleccionada = fachadaDeMascota.find(mascotaSeleccionada.getId());
+        } catch (EntityNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         String mascotaId = FacesContext.getCurrentInstance()
                 .getExternalContext()
                 .getRequestParameterMap()
@@ -65,7 +71,7 @@ public class EditarMascotaBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al actualizar", e.getMessage()));
         }
-        return (SesionDeUsuario.getUsuario().getRol().getNombre().toLowerCase()+"-dashboard.xhtml?faces-redirect=true");
+        return (usuario.getRol().getNombre().toLowerCase()+"-dashboard.xhtml?faces-redirect=true");
     }
 
     // Getters y Setters
@@ -91,5 +97,13 @@ public class EditarMascotaBean implements Serializable {
 
     public void setEmpleadosDisponibles(List<Usuario> empleadosDisponibles) {
         this.empleadosDisponibles = empleadosDisponibles;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 }

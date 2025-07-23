@@ -18,6 +18,7 @@ import java.util.List;
 @RequestScoped
 public class RegistrarUsuarioBean implements Serializable {
 
+    private String apellido;
     private String nombre;
     private String cedula;
     private String telefono;
@@ -50,6 +51,8 @@ public class RegistrarUsuarioBean implements Serializable {
             Usuario nuevo = new Usuario();
             nuevo.setNombre(nombre);
             nuevo.setCorreo(correo);
+            nuevo.setApellido(apellido);
+            nuevo.setPrimerIngreso(true);
             nuevo.setClave("123456"); // ⚠️ Puedes generar clave temporal o pedirla
             nuevo.setRol(fachadaDeSeguridad.findRolId(rolSeleccionadoId));
             // Si en tu entidad tienes cédula y teléfono, agrégalas allí también
@@ -60,12 +63,13 @@ public class RegistrarUsuarioBean implements Serializable {
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "¡Éxito!", "Empleado registrado correctamente."));
 
             limpiarFormulario();
-
+            return "administrador-dashboard.xhtml?faces-redirect=true";
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo registrar el empleado."));
+            return null;
         }
-        return "administrador-dashboard.xhtml?faces-redirect=true";
+
     }
 
     private void limpiarFormulario() {
@@ -73,6 +77,7 @@ public class RegistrarUsuarioBean implements Serializable {
         cedula = null;
         telefono = null;
         correo = null;
+        apellido=null;
         rolSeleccionadoId = null;
     }
 
@@ -92,6 +97,14 @@ public class RegistrarUsuarioBean implements Serializable {
 
     public Long getRolSeleccionadoId() { return rolSeleccionadoId; }
     public void setRolSeleccionadoId(Long rolSeleccionadoId) { this.rolSeleccionadoId = rolSeleccionadoId; }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
 
     public List<Rol> getRolesDisponibles() { return rolesDisponibles; }
     public void setRolesDisponibles(List<Rol> rolesDisponibles) { this.rolesDisponibles = rolesDisponibles; }

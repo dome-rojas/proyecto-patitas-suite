@@ -20,7 +20,7 @@ public class FachadaDeMascota implements Serializable {
     private RepositorioDeMascota repositorioDeMascota;
 
     public Mascota create(Mascota mascota) throws Exception {
-        validarDuplicado(mascota);
+        //validarDuplicado(mascota);
         return repositorioDeMascota.save(mascota);
     }
 
@@ -47,7 +47,7 @@ public class FachadaDeMascota implements Serializable {
     public List<Mascota> findMascotas(String criterio) throws EntityNotFoundException {
         return repositorioDeMascota.findWithLike(criterio.toLowerCase());
     }
-    public List<Mascota> findMascotas() throws EntityNotFoundException {
+    public List<Mascota> findMascotas(){
         return repositorioDeMascota.findAll();
     }
 

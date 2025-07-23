@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -50,14 +51,15 @@ public class Usuario implements Serializable {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "usuario_mascota",
             joinColumns = @JoinColumn(name = "id_usuario"),
-            inverseJoinColumns = @JoinColumn(name = "id_mascota"))
-    private Set<Mascota> mascotasAsignadas;
+            inverseJoinColumns = @JoinColumn(name = "id_mascota")
+    )
+    private Set<Mascota> mascotasAsignadas=new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "usuario_tareas",
             joinColumns = @JoinColumn(name = "id_usuario"),
             inverseJoinColumns = @JoinColumn(name = "id_tarea"))
-    private Set<Tarea> tareasAsignadas;
+    private Set<Tarea> tareasAsignadas=new HashSet<>();
     private boolean primerIngreso;
 
 
@@ -127,9 +129,6 @@ public class Usuario implements Serializable {
         this.rol = rol;
     }
 
-    public boolean isPrimerIngreso() {
-        return primerIngreso;
-    }
 
     public void setPrimerIngreso(boolean primerIngreso) {
         this.primerIngreso = primerIngreso;

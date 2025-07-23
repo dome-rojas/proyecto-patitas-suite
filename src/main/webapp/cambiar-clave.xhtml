@@ -72,12 +72,7 @@
 <h:body>
     <h:form styleClass="form-container">
         <h:outputText value="Cambiar Contraseña" styleClass="form-title" />
-        <!--
-        <div class="form-group">
-            <h:outputLabel for="actual" value="Contraseña actual" styleClass="form-label" />
-            <h:inputSecret id="actual" value="#{}" required="true" styleClass="form-input" />
-        </div>
--->
+
         <div class="form-group">
             <h:outputLabel for="nueva" value="Nueva contraseña" styleClass="form-label" />
             <h:inputSecret id="nueva" value="#{cambioDeCredencialesBean.nuevaClave}" required="true" styleClass="form-input" />

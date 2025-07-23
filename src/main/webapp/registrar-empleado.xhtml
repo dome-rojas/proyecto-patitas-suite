@@ -90,9 +90,18 @@
                 <p:growl id="growl" showDetail="true" autoUpdate="true" />
 
                 <div class="input-group">
-                    <label for="nombre">Nombre</label>
+                    <label for="nombre de usuario">Nombre</label>
                     <p:inputText id="nombre" value="#{registrarUsuarioBean.nombre}"
                                  placeholder="ej. Miguel Armas"
+                                 required="true"
+                                 requiredMessage="El nombre es obligatorio"/>
+                    <p:message for="nombre" />
+                </div>
+
+                <div class="input-group">
+                    <label for="apellido">Nombre</label>
+                    <p:inputText id="apellido" value="#{registrarUsuarioBean.apellido}"
+                                 placeholder="ej. Armas"
                                  required="true"
                                  requiredMessage="El nombre es obligatorio"/>
                     <p:message for="nombre" />
@@ -125,7 +134,6 @@
                     <label for="rol">Rol del Empleado</label>
                     <p:selectOneMenu id="rol"
                                      value="#{registrarUsuarioBean.rolSeleccionadoId}"
-                                     converter="javax.faces.Long"
                                      style="width: 100%;">
                         <f:selectItem itemLabel="Seleccione un Rol" itemValue="#{null}" />
                         <f:selectItems value="#{registrarUsuarioBean.rolesDisponibles}"

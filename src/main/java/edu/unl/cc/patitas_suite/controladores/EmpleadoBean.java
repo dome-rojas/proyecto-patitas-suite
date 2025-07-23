@@ -1,6 +1,6 @@
 package edu.unl.cc.patitas_suite.controladores;
 
-import edu.unl.cc.patitas_suite.controladores.seguridad.SesionDeUsuario;
+
 import edu.unl.cc.patitas_suite.dominio.comun.Usuario;
 import edu.unl.cc.patitas_suite.dominio.seguridad.EstadoHabitacion;
 import edu.unl.cc.patitas_suite.dominio.seguridad.Habitacion;
@@ -40,17 +40,22 @@ public class EmpleadoBean implements Serializable {
     @Inject
     private FachadaDeTareas fachadaTareas;
 
-    @Inject
-    private SesionDeUsuario sesionDeUsuario;
+    private Usuario empleado;
 
     @PostConstruct
-    public void init() throws Exception {
-        Usuario empleado = sesionDeUsuario.getUsuario();
-
-        if (empleado != null) {
-            this.listaMascotas = fachadaEmpleado.obtenerMascotasDelEmpleado(empleado.getId());
-            this.listaTareas = fachadaEmpleado.obtenerTareasPendientesDeEmpleado(empleado.getId());
-            this.listaHabitaciones = fachadaEmpleado.habitacionesACargo(empleado.getId());
+    public void init() {
+        this.empleado = (Usuario) FacesContext.getCurrentInstance()
+                .getExternalContext()
+                .getSessionMap()
+                .get("usuario");
+        try {
+            if (empleado != null) {
+                this.listaMascotas = fachadaEmpleado.obtenerMascotasDelEmpleado(empleado.getId());
+                this.listaTareas = fachadaEmpleado.obtenerTareasPendientesDeEmpleado(empleado.getId());
+                this.listaHabitaciones = fachadaEmpleado.habitacionesACargo(empleado.getId());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -111,5 +116,13 @@ public class EmpleadoBean implements Serializable {
 
     public void setListaHabitaciones(List<Habitacion> listaHabitaciones) {
         this.listaHabitaciones = listaHabitaciones;
+    }
+
+    public Usuario getEmpleado() {
+        return empleado;
+    }
+
+    public void setEmpleado(Usuario empleado) {
+        this.empleado = empleado;
     }
 }

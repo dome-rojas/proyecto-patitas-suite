@@ -34,18 +34,18 @@ public class Mascota implements Serializable {
     @NotNull @NotEmpty
     private String raza;
 
-    @NotNull @NotEmpty
-    private float peso;
+    @NotNull
+    private Float peso;
 
-    @NotNull @NotEmpty
+    @NotNull
     @Enumerated(EnumType.STRING)
     private Complexion complexion;
 
-    @NotNull @NotEmpty
+
     private LocalDate fechaNacimiento;
 
-    @ManyToOne
-    @JoinColumn(name = "propietario_id")
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "propietario_id", nullable = true)
     private Cliente propietario;
 
     @ManyToOne

@@ -2,6 +2,7 @@ package edu.unl.cc.patitas_suite.controladores;
 
 import edu.unl.cc.patitas_suite.dominio.comun.Usuario;
 import edu.unl.cc.patitas_suite.dominio.seguridad.Cliente;
+import edu.unl.cc.patitas_suite.dominio.seguridad.Complexion;
 import edu.unl.cc.patitas_suite.dominio.seguridad.Habitacion;
 import edu.unl.cc.patitas_suite.dominio.seguridad.Mascota;
 import edu.unl.cc.patitas_suite.excepciones.EntityNotFoundException;
@@ -19,11 +20,15 @@ import jakarta.inject.Named;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Named
 @ViewScoped
 public class RegistrarMascotaBean implements Serializable {
+    private static Logger logger = Logger.getLogger(AutenticacionBean.class.getName());
+
     // --- Datos de la mascota ---
     private String nombreMascota;
     private String especie;
@@ -50,10 +55,18 @@ public class RegistrarMascotaBean implements Serializable {
 
     @Inject
     private FachadaDeHabitacion fachadaHabitacion;
-
+    private Usuario usuario;
+    private String raza;
+    private Complexion complexion;
     @PostConstruct
     public void init() {
-
+        this.usuario = (Usuario) FacesContext.getCurrentInstance()
+                .getExternalContext()
+                .getSessionMap()
+                .get("usuario");
+    }
+    public List<Complexion> getListaComplexiones() {
+        return Arrays.asList(Complexion.values());
     }
 
     public String registrarMascota() {
@@ -62,31 +75,36 @@ public class RegistrarMascotaBean implements Serializable {
             cliente.setNombre(nombreCliente);
             cliente.setContacto(telefono);
             cliente.setDireccion(direccion);
-            //cliente.setMetodoPago(metodoPago);
+
+            fachadaCliente.guardar(cliente);
 
             Mascota mascota = new Mascota();
             mascota.setNombre(nombreMascota);
             mascota.setEspecie(especie);
             mascota.setFechaNacimiento(edad);
-            mascota.setPeso(peso);
-            mascota.setCuidador(fachadaEmpleado.obtenerEmpleado(empleadoAsignadoID));
+            mascota.setPeso(15.6f);
+            mascota.setRaza(raza);
+            mascota.setComplexion(complexion);
             mascota.setHabitacion(fachadaHabitacion.buscarPorId(habitacionSeleccionadaID));
-            mascota.setPropietario(cliente); // Relación con el cliente
+            mascota.setCuidador(fachadaEmpleado.obtenerEmpleado(empleadoAsignadoID));
+            mascota.setPropietario(cliente);
 
-            fachadaMascota.update(mascota);
-            fachadaCliente.guardar(cliente);
-            fachadaEmpleado.asignarMascotaAEmpleado(mascota.getId(), empleadoAsignadoID);
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Registro exitoso", "Mascota y cliente registrados correctamente"));
+            Mascota mascotaGuardada = fachadaMascota.create(mascota);
+            System.out.println("Mascota creada con ID: " + mascotaGuardada.getId());
 
+            fachadaEmpleado.asignarMascotaAEmpleado(mascotaGuardada.getId(), empleadoAsignadoID);
+
+            FacesUtil.addSuccessMessageAndKeep("Registro exitoso", "Mascota y propietario guardados correctamente.");
             limpiarFormulario();
 
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo registrar"));
+            e.printStackTrace(); // necesario
+            FacesUtil.addErrorMessage("Error al registrar la mascota", e.getMessage());
         }
-            return "recepcionista-dashboard.xhtml?faces-redirect=true";
+
+        return (usuario.getRol().getNombre().toLowerCase()+"-dashboard.xhtml?faces-redirect=true");
     }
+
     public List<Habitacion> obtenerHabitacionesDisponibles(){
         return fachadaHabitacion.habitacionesDisponibles();
     }
@@ -109,12 +127,36 @@ public class RegistrarMascotaBean implements Serializable {
 
     // --- Getters y Setters (obligatorios para JSF) ---
 
+    public String getRaza() {
+        return raza;
+    }
+
+    public void setRaza(String raza) {
+        this.raza = raza;
+    }
+
+    public Complexion getComplexion() {
+        return complexion;
+    }
+
+    public void setComplexion(Complexion complexion) {
+        this.complexion = complexion;
+    }
+
     public String getHabitacion() {
         return habitacion;
     }
 
     public void setHabitacion(String habitacion) {
         this.habitacion = habitacion;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public LocalDate getEdad() {

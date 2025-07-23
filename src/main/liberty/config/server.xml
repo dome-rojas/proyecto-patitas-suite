@@ -39,7 +39,9 @@
                     databaseName="patitas_suite"
                     user="patitas_admin"
                     password="p12345678"
-                    useSSL="false" serverTimezone="UTC"/>
+                    useSSL="false"
+                    allowPublicKeyRetrieval="true"
+                    serverTimezone="UTC"/>
 
     </dataSource>
 

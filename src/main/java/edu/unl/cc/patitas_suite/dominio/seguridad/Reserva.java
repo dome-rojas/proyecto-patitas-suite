@@ -28,7 +28,7 @@ public class Reserva implements Serializable {
     private Long id;
     @NotNull @Column(name = "fecha_entrada")
     private LocalDate fechaEntrada;
-    @NotNull @Column(name = "fecha_salida")
+    @NotNull @Column(name = "fecha_salida" , nullable = true)
     private LocalDate fechaSalida;
 
     @ManyToOne
