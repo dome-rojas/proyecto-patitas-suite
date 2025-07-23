@@ -5,10 +5,11 @@ import edu.unl.cc.patitas_suite.excepciones.EntityNotFoundException;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Stateless
-public class RepositorioDePermiso {
+public class RepositorioDePermiso implements Serializable {
 
     @Inject
     private ServicioDeCrudGenerico servicioCrud;

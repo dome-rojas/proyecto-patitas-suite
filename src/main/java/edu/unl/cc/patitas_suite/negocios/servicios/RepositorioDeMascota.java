@@ -2,20 +2,21 @@ package edu.unl.cc.patitas_suite.negocios.servicios;
 
 import edu.unl.cc.patitas_suite.dominio.seguridad.Mascota;
 import edu.unl.cc.patitas_suite.excepciones.EntityNotFoundException;
+import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.validation.constraints.NotNull;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RepositorioDeMascota {
+@Stateless
+public class RepositorioDeMascota implements Serializable {
 
-    @Inject
-    private EntityManager em;
     @Inject
     private ServicioDeCrudGenerico servicioCrud;
 
@@ -55,11 +56,11 @@ public class RepositorioDeMascota {
         return servicioCrud.findWithNamedQuery("Mascota.findLikeName", params);
     }
     public List<Mascota> findByNombreAndPropietario(String nombre, Long propietarioId) {
-        return em.createNamedQuery("Mascota.findByNombreAndPropietario", Mascota.class)
-                .setParameter("nombre", nombre.toLowerCase())
-                .setParameter("propietarioId", propietarioId)
-                .getResultList();
+        Map<String, Object> params = new HashMap<>();
+        params.put("propietarioId", propietarioId);
+        return servicioCrud.findWithNamedQuery("Mascota.findByNombreAndPropietario", params);
     }
+
     public List<Mascota> findByCuidador(Long cuidadorId) {
         Map<String, Object> params = new HashMap<>();
         params.put("cuidadorId", cuidadorId);

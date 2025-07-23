@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
@@ -12,18 +13,15 @@ import java.util.Objects;
 @NamedQueries({
         @NamedQuery(
                 name = "Tarea.findLikeName",
-                query = "SELECT t FROM Tarea t WHERE LOWER(t.tipo.nombre) LIKE :nombre"
-        ),
+                query = "SELECT t FROM Tarea t WHERE LOWER(t.tipo.nombre) LIKE :nombre"),
         @NamedQuery(
                 name = "Tarea.findAll",
-                query = "SELECT t FROM Tarea t"
-        ),
+                query = "SELECT t FROM Tarea t"),
         @NamedQuery(
                 name = "Tarea.findPendientesPorMascota",
-                query = "SELECT t FROM Tarea t WHERE t.mascota.id = :mascotaId AND t.completada = false"
-        )
+                query = "SELECT t FROM Tarea t WHERE t.completada = false AND t.mascota.id = :mascotaId")
 })
-public class Tarea {
+public class Tarea implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -5,9 +5,13 @@ LOCAL_MYSQL_DATA_DIR_BD=./docker/mysqldata
 MYSQL_ROOT_PASSWORD=adminer2526
 
 ## VARIABLES DE ENTORNO COMUNES
-DB_NAME=patitas-suite
+DB_NAME=patitas_suite
 DB_USER=patitas_admin
-DB_PWD=12345678
+DB_PASSWORD=p12345678
+
+# Para la aplicación
+DB_SERVER_NAME=patitas-suite-mysql-db
+DB_PORT_NUMBER=3306
 
 #DRIVER_JDBC_DIR=target/lib/postgresql-42.7.3.jar
 DRIVER_JDBC_DIR=target/lib/*.jar

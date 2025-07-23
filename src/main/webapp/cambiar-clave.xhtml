@@ -72,23 +72,23 @@
 <h:body>
     <h:form styleClass="form-container">
         <h:outputText value="Cambiar Contraseña" styleClass="form-title" />
-
+        <!--
         <div class="form-group">
             <h:outputLabel for="actual" value="Contraseña actual" styleClass="form-label" />
-            <h:inputSecret id="actual" value="#{usuarioBean.contrasenaActual}" required="true" styleClass="form-input" />
+            <h:inputSecret id="actual" value="#{}" required="true" styleClass="form-input" />
         </div>
-
+-->
         <div class="form-group">
             <h:outputLabel for="nueva" value="Nueva contraseña" styleClass="form-label" />
-            <h:inputSecret id="nueva" value="#{usuarioBean.nuevaContrasena}" required="true" styleClass="form-input" />
+            <h:inputSecret id="nueva" value="#{cambioDeCredencialesBean.nuevaClave}" required="true" styleClass="form-input" />
         </div>
 
         <div class="form-group">
             <h:outputLabel for="confirmar" value="Confirmar nueva contraseña" styleClass="form-label" />
-            <h:inputSecret id="confirmar" value="#{usuarioBean.confirmarContrasena}" required="true" styleClass="form-input" />
+            <h:inputSecret id="confirmar" value="#{cambioDeCredencialesBean.confirmarClave}" required="true" styleClass="form-input" />
         </div>
 
-        <h:commandButton value="Aceptar" action="#{usuarioBean.cambiarContrasena}" styleClass="aceptar-btn" />
+        <h:commandButton value="Aceptar" action="#{cambioDeCredencialesBean.cambiarContrasena()}" styleClass="aceptar-btn" />
     </h:form>
 </h:body>
 </html>

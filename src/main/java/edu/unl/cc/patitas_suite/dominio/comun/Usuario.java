@@ -2,6 +2,7 @@ package edu.unl.cc.patitas_suite.dominio.comun;
 
 import edu.unl.cc.patitas_suite.dominio.seguridad.Mascota;
 import edu.unl.cc.patitas_suite.dominio.seguridad.Rol;
+import edu.unl.cc.patitas_suite.dominio.seguridad.Tarea;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -12,11 +13,21 @@ import java.util.Set;
 @Entity
 @NamedQueries({
         @NamedQuery(
+                name = "Usuario.findLikeName",
+                query = "SELECT u FROM Usuario u WHERE LOWER(u.nombre) LIKE :nombre"
+        ),
+        @NamedQuery(
                 name = "Usuario.findByRol",
-                query = "SELECT u FROM Usuario u WHERE LOWER(u.rol.nombre) = :nombreRol"),
+                query = "SELECT u FROM Usuario u WHERE LOWER(u.rol.nombre) = :nombreRol"
+        ),
+        @NamedQuery(
+                name = "Usuario.findAllTareas",
+                query = "SELECT DISTINCT t FROM Usuario u JOIN u.tareasAsignadas t"
+        ),
         @NamedQuery(
                 name = "Usuario.findAll",
-                query = "SELECT u FROM Usuario u")
+                query = "SELECT u FROM Usuario u"
+        )
 })
 
 public class Usuario implements Serializable {
@@ -41,11 +52,21 @@ public class Usuario implements Serializable {
             joinColumns = @JoinColumn(name = "id_usuario"),
             inverseJoinColumns = @JoinColumn(name = "id_mascota"))
     private Set<Mascota> mascotasAsignadas;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "usuario_tareas",
+            joinColumns = @JoinColumn(name = "id_usuario"),
+            inverseJoinColumns = @JoinColumn(name = "id_tarea"))
+    private Set<Tarea> tareasAsignadas;
     private boolean primerIngreso;
 
 
-    public void cambiarClave(String nuevaClave){
-        this.clave = nuevaClave;
+    public Set<Tarea> getTareasAsignadas() {
+        return tareasAsignadas;
+    }
+
+    public void setTareasAsignadas(Set<Tarea> tareasAsignadas) {
+        this.tareasAsignadas = tareasAsignadas;
     }
 
     public boolean esPrimerIngreso(){
@@ -56,6 +77,12 @@ public class Usuario implements Serializable {
         return id;
     }
 
+    public void addMascota(Mascota mascota) {
+        mascotasAsignadas.add(mascota);
+    }
+    public void addTarea(Tarea tarea) {
+        tareasAsignadas.add(tarea);
+    }
     public void setId(Long id) {
         this.id = id;
     }

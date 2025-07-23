@@ -1,19 +1,22 @@
 package edu.unl.cc.patitas_suite.negocios.servicios;
 
+import edu.unl.cc.patitas_suite.dominio.seguridad.Habitacion;
 import edu.unl.cc.patitas_suite.dominio.seguridad.Reserva;
 import edu.unl.cc.patitas_suite.excepciones.EntityNotFoundException;
+import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.validation.constraints.NotNull;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-public class RepositorioDeReservas {
+@Stateless
+public class RepositorioDeReservas implements Serializable {
     @Inject
     private ServicioDeCrudGenerico servicioCrud;
 
@@ -37,6 +40,11 @@ public class RepositorioDeReservas {
         return reserva;
     }
     public List<Reserva> allReservas() throws EntityNotFoundException {
+        Map<String, Object> params = new HashMap<>();
+        return servicioCrud.findWithNamedQuery("Reserva.findAll", params);
+    }
+
+    public List<Habitacion> allHabitaciones() throws EntityNotFoundException {
         Map<String, Object> params = new HashMap<>();
         return servicioCrud.findWithNamedQuery("Reserva.findAll", params);
     }
