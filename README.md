@@ -7,7 +7,7 @@ Once the runtime starts, you can access the project at [http://localhost:9080](h
 ./mvnw clean package
 docker build -t patitas-suite:v1 .
 ```
-ORDEN DE COMO EJECUTAR EL PROYECTO
+#ORDEN DE COMO EJECUTAR EL PROYECTO
  Comando para limpiar el target (cualquiera de los 2):
  ./mvnw clean
  mvnd clean
@@ -24,28 +24,31 @@ ORDEN DE COMO EJECUTAR EL PROYECTO
  ./mvnw liberty:dev
  mvnd liberty:dev
 
- Lo de abajo solo es necesario ejecutarlo despues de ejecutar los comandos de arriba (todos) y el proyecto por primera vez:
+#Lo de abajo solo es necesario ejecutarlo despues de ejecutar los comandos de arriba (todos) y el proyecto por primera vez:
 ------------------------------------------------------------------------------------------------------------------------------------
 
-PARA EJECUTAR EN WINDOWS LOS VALORES INICIALES DE LAS TABLAS: 
+#PARA EJECUTAR EN WINDOWS LOS VALORES INICIALES DE LAS TABLAS: 
 
 docker cp src\main\resources\META-INF\initial-data.sql patitas-suite-mysql-db-container:/tmp/initial-data.sql
 
 docker exec -it patitas-suite-mysql-db-container mysql -u patitas_admin -p patitas_suite
 
 # Cuando te pida la contraseña, escribe:
-# p12345678
+p12345678
+Si no funciona esa clave: adminer2526
 
+# Luego dentro del prompt MySQL ejecuta:
 source /tmp/initial-data.sql;
 
 ------------------------------------------------------------------------------------------------------------------------------------
-PARA EJECUTAR EN LINUX LOS VALORES INICIALES DE LAS TABLAS:
+#PARA EJECUTAR EN LINUX LOS VALORES INICIALES DE LAS TABLAS:
 
 docker cp src/main/resources/META-INF/initial-data.sql patitas-suite-mysql-db-container:/tmp/initial-data.sql
 
 docker exec -it patitas-suite-mysql-db-container mysql -u patitas_admin -p patitas_suite
 # Cuando te pida la contraseña, escribe:
-# p12345678
+p12345678
+Si no funciona esa clave: adminer2526
 
 # Luego dentro del prompt MySQL ejecuta:
 source /tmp/initial-data.sql;
