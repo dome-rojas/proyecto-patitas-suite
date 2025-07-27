@@ -1,2 +1,3 @@
 target/
+docker/mysqldata/
 .mvn/wrapper/maven-wrapper.jar

@@ -1,7 +1,6 @@
 package edu.unl.cc.patitas_suite.controladores.seguridad;
 
 import edu.unl.cc.patitas_suite.dominio.comun.Usuario;
-import edu.unl.cc.patitas_suite.dominio.seguridad.Rol;
 import edu.unl.cc.patitas_suite.dominio.seguridad.TipoDeAccion;
 import edu.unl.cc.patitas_suite.excepciones.EntityNotFoundException;
 import edu.unl.cc.patitas_suite.negocios.FachadaDeSeguridad;
@@ -10,7 +9,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.validation.constraints.NotNull;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.logging.Logger;
 
@@ -28,7 +26,7 @@ public class SesionDeUsuario implements Serializable {
     private Usuario usuario;
 
     public void postLogin(@NotNull Usuario usuario) throws EntityNotFoundException {
-        logger.info("Usuario Registrado en : " + usuario.getNombre());
+        logger.info("Usuario Registrado en : " + usuario.getUserName());
         this.usuario = usuario;
         //Rol rol = securityFacade.findRolesWithPermission(this.usuario.getId());
         //usuario.setRol(rol);

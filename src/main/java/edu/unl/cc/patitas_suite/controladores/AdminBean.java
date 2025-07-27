@@ -14,6 +14,8 @@ import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +33,15 @@ public class AdminBean implements Serializable {
     private FachadaDeEmpleado fachadaDeEmpleado;
     @Inject
     private FachadaDeSeguridad fachadaDeSeguridad;
+    @Inject
+    private FacesContext facesContext;
+
+    public String redirigirEdicion(Usuario usuario) {
+
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("usuarioId", usuario.getId());
+        return "editar-usuario?faces-redirect=true";
+    }
+
     public int getTotalMascotas() {
         FacesUtil.addErrorMessage("No se pudieron encontrar mascotas");
         return fachadaDeMascota.findMascotas().size();

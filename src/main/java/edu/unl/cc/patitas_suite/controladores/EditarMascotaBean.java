@@ -34,32 +34,39 @@ public class EditarMascotaBean implements Serializable {
 
     @PostConstruct
     public void init() {
+        // 1. Obtener el usuario desde la sesión
         this.usuario = (Usuario) FacesContext.getCurrentInstance()
                 .getExternalContext()
                 .getSessionMap()
                 .get("usuario");
 
+        // 2. Cargar empleados y habitaciones desde el bean inyectado
         this.empleadosDisponibles = registrarMascotaBean.obtenerEmpleados();
         this.habitacionesDisponibles = registrarMascotaBean.obtenerHabitacionesDisponibles();
-        try{
-            this.mascotaSeleccionada = fachadaDeMascota.find(mascotaSeleccionada.getId());
-        } catch (EntityNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        String mascotaId = FacesContext.getCurrentInstance()
+
+        // 3. Obtener el ID de mascota desde los parámetros de la URL (GET)
+        String mascotaIdParam = FacesContext.getCurrentInstance()
                 .getExternalContext()
                 .getRequestParameterMap()
                 .get("mascotaId");
-        if (mascotaId != null) {
+
+        if (mascotaIdParam != null && !mascotaIdParam.isEmpty()) {
             try {
-                Long id = Long.parseLong(mascotaId);
-                mascotaSeleccionada = fachadaDeMascota.find(id);
+                Long mascotaId = Long.parseLong(mascotaIdParam);
+                this.mascotaSeleccionada = fachadaDeMascota.find(mascotaId);
+            } catch (NumberFormatException e) {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "ID inválido", "El ID de la mascota no es válido."));
             } catch (EntityNotFoundException e) {
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_ERROR, "Mascota no encontrada", e.getMessage()));
             }
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Mascota no seleccionada", "No se especificó un ID de mascota."));
         }
     }
+
 
     public String actualizarMascota() {
         try {

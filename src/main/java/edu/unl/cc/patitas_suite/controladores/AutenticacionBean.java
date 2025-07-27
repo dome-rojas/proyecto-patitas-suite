@@ -8,7 +8,6 @@ import edu.unl.cc.patitas_suite.negocios.FachadaDeSeguridad;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
-import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.ServletException;
@@ -48,7 +47,7 @@ public class AutenticacionBean implements Serializable {
             logger.info("Logging in with password: " + usuario.getRol().getNombre());
             setHttpSession(usuario);
             logger.info("Logging in with password: " + usuario.getRol().getNombre());
-            FacesUtil.addMessageAndKeep(FacesMessage.SEVERITY_INFO, "Aviso", "Bienvenido " + usuario.getNombre() + " a la aplicación Patitas Suite.");
+            FacesUtil.addMessageAndKeep(FacesMessage.SEVERITY_INFO, "Aviso", "Bienvenido " + usuario.getUserName() + " a la aplicación Patitas Suite.");
             //FacesMessage fc = new FacesMessage(FacesMessage.SEVERITY_INFO, "Bienvenido", "Bienvenido " + user.getName() + " a la aplicación Jbrew.");
             //facesContext.addMessage(null, fc);
             //facesContext.getExternalContext().getFlash().setKeepMessages(true);

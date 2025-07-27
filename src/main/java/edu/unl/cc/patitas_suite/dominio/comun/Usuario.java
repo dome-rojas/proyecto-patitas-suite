@@ -15,7 +15,7 @@ import java.util.Set;
 @NamedQueries({
         @NamedQuery(
                 name = "Usuario.findLikeName",
-                query = "SELECT u FROM Usuario u WHERE LOWER(u.nombre) LIKE :nombre"
+                query = "SELECT u FROM Usuario u WHERE LOWER(u.userName) LIKE :nombre"
         ),
         @NamedQuery(
                 name = "Usuario.findByRol",
@@ -36,9 +36,9 @@ public class Usuario implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull @NotEmpty
-    private String nombre;
+    private String userName;
     @NotNull @NotEmpty
-    private String apellido;
+    private String nombreCompleto;
     @NotNull @NotEmpty
     private String correo;
     @NotNull @NotEmpty
@@ -89,20 +89,20 @@ public class Usuario implements Serializable {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setUserName(String nombre) {
+        this.userName = nombre;
     }
 
-    public String getApellido() {
-        return apellido;
+    public String getNombreCompleto() {
+        return nombreCompleto;
     }
 
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
+    public void setNombreCompleto(String apellido) {
+        this.nombreCompleto = apellido;
     }
 
     public String getCorreo() {

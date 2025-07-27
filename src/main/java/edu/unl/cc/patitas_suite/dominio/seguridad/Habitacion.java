@@ -23,7 +23,7 @@ public class Habitacion implements Serializable {
 
     private int capacidad;
     @Enumerated(EnumType.STRING)
-    private EstadoHabitacion estado=EstadoHabitacion.LIBRE;
+    private EstadoHabitacion estado;
 
     @ManyToOne
     @JoinColumn(name = "mascota_actual_id")

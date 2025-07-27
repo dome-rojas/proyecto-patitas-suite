@@ -263,7 +263,7 @@
                              widgetVar="usuariosTable">
 
                     <p:column headerText="Nombre">
-                        <h:outputText value="#{usuario.nombre}" />
+                        <h:outputText value="#{usuario.userName}" />
                     </p:column>
 
                     <p:column headerText="Rol">
@@ -273,7 +273,8 @@
                     <p:column headerText="Acciones" exportable="false">
                         <p:commandButton icon="pi pi-pencil"
                                          title="Editar usuario"
-                                         action="#{temporalBean.mensajeDeError()}"
+                                         action="#{adminBean.redirigirEdicion(usuario)}"
+                                         ajax="false"
                                          styleClass="ui-button-flat ui-button-info" />
 
                         <p:commandButton icon="pi pi-trash"

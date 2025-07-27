@@ -28,7 +28,7 @@ public class Reserva implements Serializable {
     private Long id;
     @NotNull @Column(name = "fecha_entrada")
     private LocalDate fechaEntrada;
-    @NotNull @Column(name = "fecha_salida" , nullable = true)
+    @Column(name = "fecha_salida" , nullable = true)
     private LocalDate fechaSalida;
 
     @ManyToOne
@@ -40,6 +40,8 @@ public class Reserva implements Serializable {
 
     @OneToOne @JoinColumn(name = "habitacion_id")
     private Habitacion habitacion;
+
+    private boolean estado;
 
     public Usuario getCuidador() {
         return cuidador;
