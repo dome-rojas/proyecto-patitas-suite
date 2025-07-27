@@ -6,6 +6,7 @@ services:
     image: mysql:${MYSQL_VERSION}
     restart: unless-stopped
     container_name: patitas-suite-mysql-db-container
+    user: 999:999
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}

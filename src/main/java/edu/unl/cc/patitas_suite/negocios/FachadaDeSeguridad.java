@@ -12,7 +12,6 @@ import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 
 import java.io.Serializable;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -47,7 +46,7 @@ public class FachadaDeSeguridad implements Serializable {
         String pwdEncrypted = GestorDeCifrado.encrypt(usuario.getClave());
         usuario.setClave(pwdEncrypted);
         try {
-            repositorioDeUsuarios.find(usuario.getNombre());
+            repositorioDeUsuarios.find(usuario.getUserName());
         } catch (EntityNotFoundException e){
             Usuario userPersisted = repositorioDeUsuarios.save(usuario);
             return userPersisted;
@@ -62,7 +61,7 @@ public class FachadaDeSeguridad implements Serializable {
         String pwdEncrypted = GestorDeCifrado.encrypt(usuario.getClave());
         usuario.setClave(pwdEncrypted);
         try {
-            Usuario userFound = repositorioDeUsuarios.find(usuario.getNombre());
+            Usuario userFound = repositorioDeUsuarios.find(usuario.getUserName());
             if  (!userFound.getId().equals(usuario.getId())){
                 throw new Exception("Ya existe otro usuario con ese nombre");
             }

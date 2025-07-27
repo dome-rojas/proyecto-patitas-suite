@@ -20,6 +20,8 @@
                 justify-content: center;
                 align-items: center;
                 height: 100vh;
+                margin-top: 40px;
+                margin-bottom: 40px;
             }
 
             .form-container {
@@ -90,8 +92,17 @@
                 <p:growl id="growl" showDetail="true" autoUpdate="true" />
 
                 <div class="input-group">
-                    <label for="nombre de usuario">Nombre</label>
-                    <p:inputText id="nombre" value="#{registrarUsuarioBean.nombre}"
+                    <label for="nombre de usuario">Nombre de Usuaio</label>
+                    <p:inputText id="username" value="#{registrarUsuarioBean.username}"
+                                 placeholder="ej. Miguel Armas"
+                                 required="true"
+                                 requiredMessage="El nombre de usuario es obligatorio"/>
+                    <p:message for="nombre" />
+                </div>
+
+                <div class="input-group">
+                    <label for="nombre">Nombre del empleado</label>
+                    <p:inputText id="nombre" value="#{registrarUsuarioBean.nombreCompleto}"
                                  placeholder="ej. Miguel Armas"
                                  required="true"
                                  requiredMessage="El nombre es obligatorio"/>
@@ -99,18 +110,9 @@
                 </div>
 
                 <div class="input-group">
-                    <label for="apellido">Nombre</label>
-                    <p:inputText id="apellido" value="#{registrarUsuarioBean.apellido}"
-                                 placeholder="ej. Armas"
-                                 required="true"
-                                 requiredMessage="El nombre es obligatorio"/>
-                    <p:message for="nombre" />
-                </div>
-
-                <div class="input-group">
                     <label for="cedula">Cédula</label>
-                    <p:inputText id="cedula" value="#{registrarUsuarioBean.cedula}"
-                                 placeholder="ej. 1103203889"
+                    <p:inputText id="cedula" value="#{registrarUsuarioBean.clave}"
+                                 placeholder="ej. 123456789"
                                  required="true"
                                  requiredMessage="La cedula es obligatoria"/>
                     <p:message for="cedula" />

@@ -18,9 +18,9 @@ import java.util.List;
 @RequestScoped
 public class RegistrarUsuarioBean implements Serializable {
 
-    private String apellido;
-    private String nombre;
-    private String cedula;
+    private String nombreCompleto;
+    private String username;
+    private String clave;
     private String telefono;
     private String correo;
     private Long rolSeleccionadoId;
@@ -49,13 +49,13 @@ public class RegistrarUsuarioBean implements Serializable {
     public String registrar() {
         try {
             Usuario nuevo = new Usuario();
-            nuevo.setNombre(nombre);
+            nuevo.setUserName(username);
             nuevo.setCorreo(correo);
-            nuevo.setApellido(apellido);
+            nuevo.setNombreCompleto(nombreCompleto);
             nuevo.setPrimerIngreso(true);
-            nuevo.setClave("123456"); // ⚠️ Puedes generar clave temporal o pedirla
+            nuevo.setClave(clave); //
             nuevo.setRol(fachadaDeSeguridad.findRolId(rolSeleccionadoId));
-            // Si en tu entidad tienes cédula y teléfono, agrégalas allí también
+
 
             fachadaDeSeguridad.create(nuevo);
 
@@ -73,21 +73,21 @@ public class RegistrarUsuarioBean implements Serializable {
     }
 
     private void limpiarFormulario() {
-        nombre = null;
-        cedula = null;
+        username = null;
+        clave = null;
         telefono = null;
         correo = null;
-        apellido=null;
+        nombreCompleto =null;
         rolSeleccionadoId = null;
     }
 
     // Getters y Setters para JSF
 
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 
-    public String getCedula() { return cedula; }
-    public void setCedula(String cedula) { this.cedula = cedula; }
+    public String getClave() { return clave; }
+    public void setClave(String clave) { this.clave = clave; }
 
     public String getTelefono() { return telefono; }
     public void setTelefono(String telefono) { this.telefono = telefono; }
@@ -98,12 +98,12 @@ public class RegistrarUsuarioBean implements Serializable {
     public Long getRolSeleccionadoId() { return rolSeleccionadoId; }
     public void setRolSeleccionadoId(Long rolSeleccionadoId) { this.rolSeleccionadoId = rolSeleccionadoId; }
 
-    public String getApellido() {
-        return apellido;
+    public String getNombreCompleto() {
+        return nombreCompleto;
     }
 
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
+    public void setNombreCompleto(String nombreCompleto) {
+        this.nombreCompleto = nombreCompleto;
     }
 
     public List<Rol> getRolesDisponibles() { return rolesDisponibles; }

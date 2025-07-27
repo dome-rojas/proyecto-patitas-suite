@@ -30,6 +30,6 @@ public class UsuarioPrincipal implements Principal, Serializable {
 
     @Override
     public String getName() {
-        return usuario.getNombre();
+        return usuario.getUserName();
     }
 }

@@ -1,5 +1,6 @@
 package edu.unl.cc.patitas_suite.controladores;
 
+import edu.unl.cc.patitas_suite.controladores.seguridad.SesionDeUsuario;
 import edu.unl.cc.patitas_suite.dominio.comun.Usuario;
 import edu.unl.cc.patitas_suite.dominio.seguridad.Cliente;
 import edu.unl.cc.patitas_suite.dominio.seguridad.Complexion;
@@ -33,7 +34,7 @@ public class RegistrarMascotaBean implements Serializable {
     private String nombreMascota;
     private String especie;
     private LocalDate edad;
-    private Float peso;
+    private float peso=0;
     private Long habitacionSeleccionadaID;
     private String habitacion;
     private Long empleadoAsignadoID;
@@ -54,23 +55,51 @@ public class RegistrarMascotaBean implements Serializable {
     private FachadaDeEmpleado fachadaEmpleado;
 
     @Inject
+    private SesionDeUsuario sesionDeUsuario;
+
+    @Inject
     private FachadaDeHabitacion fachadaHabitacion;
     private Usuario usuario;
     private String raza;
     private Complexion complexion;
     @PostConstruct
     public void init() {
-        this.usuario = (Usuario) FacesContext.getCurrentInstance()
+        Object value = FacesContext.getCurrentInstance()
                 .getExternalContext()
                 .getSessionMap()
                 .get("usuario");
+
+        if (value != null && value instanceof Usuario usuarioSesion) {
+            this.usuario = usuarioSesion;
+        } else {
+            System.err.println("‼ Usuario no encontrado en sesión");
+        }
     }
     public List<Complexion> getListaComplexiones() {
         return Arrays.asList(Complexion.values());
     }
 
+
     public String registrarMascota() {
+
+        if (usuario == null) {
+            // Refuerzo en caso el PostConstruct no haya funcionado
+            this.usuario = sesionDeUsuario.getUsuario();
+            if (usuario == null) {
+                FacesUtil.addErrorMessage("Sesión perdida", "Por favor inicia sesión nuevamente.");
+                return "/login.xhtml?faces-redirect=true";
+            }
+        }
         try {
+            this.peso=12.5f;
+            System.out.println("DEBUG peso: " + peso);
+
+            if (usuario == null) {
+                // Apenas por seguridad si el bean se perdió
+                usuario = (Usuario) FacesContext.getCurrentInstance()
+                        .getExternalContext().getSessionMap().get("usuario");
+            }
+
             Cliente cliente = new Cliente();
             cliente.setNombre(nombreCliente);
             cliente.setContacto(telefono);
@@ -82,7 +111,7 @@ public class RegistrarMascotaBean implements Serializable {
             mascota.setNombre(nombreMascota);
             mascota.setEspecie(especie);
             mascota.setFechaNacimiento(edad);
-            mascota.setPeso(15.6f);
+            mascota.setPeso(peso); // Ya está validado
             mascota.setRaza(raza);
             mascota.setComplexion(complexion);
             mascota.setHabitacion(fachadaHabitacion.buscarPorId(habitacionSeleccionadaID));
@@ -90,19 +119,21 @@ public class RegistrarMascotaBean implements Serializable {
             mascota.setPropietario(cliente);
 
             Mascota mascotaGuardada = fachadaMascota.create(mascota);
-            System.out.println("Mascota creada con ID: " + mascotaGuardada.getId());
+            System.out.println("Mascota creada: ID = " + mascotaGuardada.getId());
 
             fachadaEmpleado.asignarMascotaAEmpleado(mascotaGuardada.getId(), empleadoAsignadoID);
 
-            FacesUtil.addSuccessMessageAndKeep("Registro exitoso", "Mascota y propietario guardados correctamente.");
+            FacesUtil.addSuccessMessageAndKeep("Registro exitoso", "Mascota registrada correctamente.");
+
             limpiarFormulario();
 
-        } catch (Exception e) {
-            e.printStackTrace(); // necesario
-            FacesUtil.addErrorMessage("Error al registrar la mascota", e.getMessage());
-        }
+            return usuario.getRol().getNombre().toLowerCase() + "-dashboard.xhtml?faces-redirect=true";
 
-        return (usuario.getRol().getNombre().toLowerCase()+"-dashboard.xhtml?faces-redirect=true");
+        } catch (Exception e) {
+            e.printStackTrace();
+            FacesUtil.addErrorMessage("Error", e.getMessage());
+            return null;
+        }
     }
 
     public List<Habitacion> obtenerHabitacionesDisponibles(){
@@ -115,7 +146,7 @@ public class RegistrarMascotaBean implements Serializable {
         nombreMascota = null;
         especie = null;
         edad = null;
-        peso = null;
+        peso = 0;
         habitacionSeleccionadaID = null;
         empleadoAsignadoID = null;
 
@@ -167,11 +198,11 @@ public class RegistrarMascotaBean implements Serializable {
         this.edad = edad;
     }
 
-    public Float getPeso() {
+    public float getPeso() {
         return peso;
     }
 
-    public void setPeso(Float peso) {
+    public void setPeso(float peso) {
         this.peso = peso;
     }
 

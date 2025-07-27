@@ -149,15 +149,16 @@
             <div class="field">
                 <label>Empleado asignado:</label>
                 <p:selectOneMenu id="empleado"
-                                 value="#{editarMascotaBean.mascotaSeleccionada.cuidador.id}"
-                                 converter="javax.faces.Long"
+                                 value="#{editarMascotaBean.mascotaSeleccionada.cuidador}"
+                                 converter="#{usuarioConverter}"
                                  style="width: 100%;">
                     <f:selectItem itemLabel="Seleccione un Empleado" itemValue="#{null}" />
                     <f:selectItems value="#{editarMascotaBean.empleadosDisponibles}"
                                    var="emp"
-                                   itemLabel="#{emp.nombre}"
-                                   itemValue="#{emp.id}" />
+                                   itemLabel="#{emp.userName}"
+                                   itemValue="#{emp}" />
                 </p:selectOneMenu>
+
             </div>
 
             <!-- Botón guardar -->
