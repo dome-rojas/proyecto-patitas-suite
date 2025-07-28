@@ -34,6 +34,8 @@ public class AdminBean implements Serializable {
     @Inject
     private FachadaDeSeguridad fachadaDeSeguridad;
     @Inject
+    private FachadaUsuarioMascotaTarea fachadaUsuarioMascotaTarea;
+    @Inject
     private FacesContext facesContext;
 
     public String redirigirEdicion(Usuario usuario) {
@@ -43,15 +45,22 @@ public class AdminBean implements Serializable {
     }
 
     public int getTotalMascotas() {
-        FacesUtil.addErrorMessage("No se pudieron encontrar mascotas");
-        return fachadaDeMascota.findMascotas().size();
+        try {
+            return fachadaDeMascota.obtenerTodas().size();
+        } catch(Exception e) {
+            FacesUtil.addErrorMessage("No se pudieron encontrar mascotas");
+            return 0;
+        }
     }
 
     public int getTotalHabitaciones() {
-        FacesUtil.addErrorMessage("Error al contar habitaciones");
-        return fachadaDeHabitacion.todasLasHabitaciones().size();
+        try {
+            return fachadaDeHabitacion.todasLasHabitaciones().size();
+        } catch(Exception e) {
+            FacesUtil.addErrorMessage("Error al contar habitaciones");
+            return 0;
+        }
     }
-
 
     public int getTotalTareas() {
         try {
@@ -67,6 +76,16 @@ public class AdminBean implements Serializable {
             return fachadaDeEmpleado.obtenerTodosLosEmpleados().size();
         } catch (Exception e) {
             FacesUtil.addErrorMessage("No se pudieron contar empleados");
+            return 0;
+        }
+    }
+
+    // Listado de asignaciones pendientes si así lo requieres
+    public int getTotalTareasAsignadasNoCompletadas() {
+        try {
+            return fachadaDeTareas.todasLasTareas().size();
+        } catch (Exception e) {
+            FacesUtil.addErrorMessage("No se pudieron contar tareas pendientes");
             return 0;
         }
     }

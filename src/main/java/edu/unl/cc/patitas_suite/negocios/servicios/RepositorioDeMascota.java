@@ -1,6 +1,8 @@
 package edu.unl.cc.patitas_suite.negocios.servicios;
 
+import edu.unl.cc.patitas_suite.dominio.comun.UsuarioMascotaTarea;
 import edu.unl.cc.patitas_suite.dominio.seguridad.Mascota;
+import edu.unl.cc.patitas_suite.dominio.seguridad.Tarea;
 import edu.unl.cc.patitas_suite.excepciones.EntityNotFoundException;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
@@ -19,8 +21,18 @@ public class RepositorioDeMascota implements Serializable {
 
     @Inject
     private ServicioDeCrudGenerico servicioCrud;
+    @Inject
+    private RepositorioDeUsuarioMascotaTarea repositorioDeUsuarioMascotaTarea;
 
     public RepositorioDeMascota() {
+    }
+
+    public List<Tarea> findTareasAsignadasAMascota(Long mascotaId) {
+        List<UsuarioMascotaTarea> asignaciones = repositorioDeUsuarioMascotaTarea.findByMascota(mascotaId);
+        return asignaciones.stream()
+                .map(UsuarioMascotaTarea::getTarea)
+                .distinct()
+                .toList();
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)

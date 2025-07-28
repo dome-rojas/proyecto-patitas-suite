@@ -1,57 +1,41 @@
 package edu.unl.cc.patitas_suite.negocios.servicios;
 
-import edu.unl.cc.patitas_suite.dominio.seguridad.Mascota;
-import edu.unl.cc.patitas_suite.dominio.seguridad.Rol;
-import edu.unl.cc.patitas_suite.dominio.seguridad.Tarea;
+import edu.unl.cc.patitas_suite.dominio.seguridad.Cliente;
+import edu.unl.cc.patitas_suite.excepciones.EntityNotFoundException;
 import jakarta.ejb.Stateless;
-import jakarta.ejb.TransactionAttribute;
-import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.Query;
 
-import java.io.Serializable;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
+import edu.unl.cc.patitas_suite.dominio.seguridad.Rol;
 
 @Stateless
-public class RepositorioDeRoles implements Serializable {
+public class RepositorioDeRoles {
 
     @Inject
-    private ServicioDeCrudGenerico servicioCrud;
+    private ServicioDeCrudGenerico servicioDeCrud;
 
-    public Set<Rol> findAllWithPermissions(){
-        return new HashSet<>(servicioCrud.findWithQuery("select * from rol"));
+    public Rol save(Rol rol) {
+        return rol.getId() == null ? servicioDeCrud.create(rol) : servicioDeCrud.update(rol);
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Rol save(Rol rol){
-        if (rol.getId() == null){
-            return servicioCrud.create(rol);
-        } else {
-            return servicioCrud.update(rol);
-        }
+    public Rol findById(Long id) {
+        return servicioDeCrud.find(Rol.class, id);
     }
-    public List<Rol> allRoles() throws edu.unl.cc.patitas_suite.excepciones.EntityNotFoundException {
-        return servicioCrud.findWithNamedQuery("Rol.findAll", new HashMap<>());
-    }
-    public Rol findRolId(Long id) throws EntityNotFoundException {
-        Rol rol = servicioCrud.find(Rol.class, id);
-        if (rol == null){
-            throw new EntityNotFoundException("Rol no encontrado con [" + id + "]");
+
+    public Rol findByNombre(String nombre) throws EntityNotFoundException {
+        Map<String, Object> params = new HashMap<>();
+        params.put("nombre", nombre.toLowerCase());
+        Rol rolEncontrado = (Rol) servicioDeCrud.findSingleResultOrNullWithNamedQuery("Rol.findByNombre", params);
+        if (rolEncontrado == null) {
+            throw new EntityNotFoundException("Cliente no encontrado con [" + nombre + "]");
         }
-        return rol;
+        return rolEncontrado;
     }
-    public Rol find(String nombre) throws EntityNotFoundException {
-        String sql = "SELECT * FROM ROL WHERE nombre LIKE ?";
-        Query query = servicioCrud.createNativeQuery(sql, Rol.class);
-        query.setParameter(1, nombre.toLowerCase());
-        Rol entity = (Rol) servicioCrud.findSingleResultOrNullWithQuery(query);
-        if (entity != null) {
-            return entity;
-        }
-        throw new EntityNotFoundException("Rol no encontrado con Nombre [" + nombre + "]");
+
+    public List<Rol> findAll() {
+        return servicioDeCrud.findWithNamedQuery("Rol.findAll", Map.of());
     }
 }
+

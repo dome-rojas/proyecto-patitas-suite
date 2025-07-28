@@ -1,23 +1,19 @@
 package edu.unl.cc.patitas_suite.negocios;
 
 import edu.unl.cc.patitas_suite.dominio.comun.Usuario;
-import edu.unl.cc.patitas_suite.dominio.seguridad.EstadoMascota;
+import edu.unl.cc.patitas_suite.dominio.comun.UsuarioMascotaTarea;
 import edu.unl.cc.patitas_suite.dominio.seguridad.Habitacion;
 import edu.unl.cc.patitas_suite.dominio.seguridad.Mascota;
 import edu.unl.cc.patitas_suite.dominio.seguridad.Tarea;
 import edu.unl.cc.patitas_suite.excepciones.EntityNotFoundException;
-import edu.unl.cc.patitas_suite.negocios.servicios.RepositorioDeMascota;
-import edu.unl.cc.patitas_suite.negocios.servicios.RepositorioDeTareas;
+import edu.unl.cc.patitas_suite.negocios.servicios.RepositorioDeUsuarioMascotaTarea;
 import edu.unl.cc.patitas_suite.negocios.servicios.RepositorioDeUsuarios;
 import jakarta.ejb.Stateless;
-import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Stateless
@@ -27,77 +23,69 @@ public class FachadaDeEmpleado implements Serializable {
     private RepositorioDeUsuarios repositorioDeUsuarios;
 
     @Inject
-    private RepositorioDeMascota repositorioDeMascotas;
+    private RepositorioDeUsuarioMascotaTarea repositorioDeUsuarioMascotaTarea;
 
-    @Inject
-    private RepositorioDeTareas repositorioDeTareas;
+    public Usuario deshabilitarUsuario(Usuario usuario) throws Exception {
 
-    public Usuario obtenerEmpleado(Long id) throws EntityNotFoundException {
-        Usuario empleado = repositorioDeUsuarios.find(id);
-        if (empleado == null) {
-            throw new EntityNotFoundException("Mascota no encontrada con ID: " + id);
-        }
-        return empleado;
+        return repositorioDeUsuarios.save(usuario);
     }
 
-    public List<Habitacion> habitacionesACargo(Long id) throws EntityNotFoundException {
-        Usuario empleado = repositorioDeUsuarios.find(id);
-
-        List<Mascota> mascotas = new ArrayList<>(empleado.getMascotasAsignadas());
-        List<Habitacion> habitaciones = new ArrayList<>();
-
-        for (Mascota m : mascotas) {
-            Habitacion h = m.getHabitacion();
-            if (h != null && !habitaciones.contains(h)) {
-                habitaciones.add(h);
-            }
-        }
-        return habitaciones;
+    public Usuario guardarEmpleado(Usuario usuario) throws Exception {
+        return repositorioDeUsuarios.save(usuario);
     }
 
-
-    public void asignarMascotaAEmpleado(Long mascotaId, Long empleadoId) throws Exception {
-        Mascota mascota = repositorioDeMascotas.find(mascotaId);
-        Usuario empleado = repositorioDeUsuarios.find(empleadoId);
-        if (mascota.getCuidador() != null && mascota.getCuidador().getId().equals(empleadoId)) {
-            return;
-        }
-        mascota.setCuidador(empleado);
-        repositorioDeMascotas.save(mascota);
-        empleado.getMascotasAsignadas().add(mascota);
-        repositorioDeUsuarios.save(empleado);
+    public Usuario obtenerEmpleadoPorId(Long id) throws EntityNotFoundException {
+        Usuario usuario = repositorioDeUsuarios.find(id);
+        if(usuario == null) throw new EntityNotFoundException("Usuario no encontrado con id " + id);
+        return usuario;
     }
 
-    public List<Mascota> obtenerMascotasDelEmpleado(Long empleadoId) throws Exception {
-        Usuario empleado = repositorioDeUsuarios.find(empleadoId);
-        return repositorioDeMascotas.findByCuidador(empleado.getId());
-    }
-
-    public List<Tarea> obtenerTareasPendientesDeEmpleado(Long empleadoId) throws Exception {
-        List<Mascota> mascotas = obtenerMascotasDelEmpleado(empleadoId);
-
-        return mascotas.stream()
-                .flatMap(m -> repositorioDeTareas.findPendientesPorMascota(m.getId()).stream())
-                .collect(Collectors.toList());
-    }
-
-    public void completarTarea(Long tareaId) throws Exception {
-        Tarea tarea = repositorioDeTareas.find(tareaId);
-        tarea.setCompletada(true);
-        repositorioDeTareas.save(tarea);
+    public List<Usuario> obtenerEmpleadosPorRol(String rol) {
+        return repositorioDeUsuarios.findByRol(rol);
     }
 
     public List<Usuario> obtenerTodosLosEmpleados() {
-        return repositorioDeUsuarios.findByRol("EMPLEADO");
+        List<Usuario> usuarios =repositorioDeUsuarios.findAllUsuarios();
+        Iterator<Usuario> iter = usuarios.iterator();
+        while(iter.hasNext()) {
+            Usuario u = iter.next();
+            if(!"Empleado".equalsIgnoreCase(u.getRol().getNombre())) {
+                iter.remove();
+            }
+        }
+        return usuarios;
     }
 
+    // Obtener todas las tareas asignadas a un usuario (empleado)
+    public List<Tarea> obtenerTareasAsignadas(Long usuarioId) throws EntityNotFoundException {
+        List<UsuarioMascotaTarea> asignaciones = repositorioDeUsuarioMascotaTarea.findByUsuario(usuarioId);
+        return asignaciones.stream()
+                .map(UsuarioMascotaTarea::getTarea)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+    public List<Mascota> obtenerMascotasAsignadas(Long usuarioId) throws EntityNotFoundException {
+        List<UsuarioMascotaTarea> asignaciones = repositorioDeUsuarioMascotaTarea.findByUsuario(usuarioId);
+        return asignaciones.stream()
+                .map(UsuarioMascotaTarea::getMascota)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+    public List<Habitacion> obtenerHabitacionesAsignadas(Long usuarioId) throws EntityNotFoundException {
+        List<UsuarioMascotaTarea> asignaciones = repositorioDeUsuarioMascotaTarea.findByUsuario(usuarioId);
+        List<Mascota> mascotas = asignaciones.stream()
+                .map(UsuarioMascotaTarea::getMascota)
+                .distinct()
+                .toList();
+        return mascotas.stream()
+                .map(Mascota::getHabitacion)
+                .distinct()
+                .collect(Collectors.toList());
+    }
 
-    // 5. Reportar al veterinario que una mascota tiene un problema
-    /*public void reportarMascotaAVeterinario(Long mascotaId, String observacion, Long empleadoId) throws Exception {
-        Mascota mascota = repositorioDeMascotas.find(mascotaId);
-        mascota.setEstado(EstadoMascota.EN_OBSERVACION);
-
-        // Aquí podrías generar un Informe o RegistroMedico si tienes esa entidad
-        repositorioDeMascotas.saveInformeMedico(mascotaId, empleadoId, observacion);
-    }*/
+    // Completar tarea específica
+    public void completarTarea(Long usuarioId, Long mascotaId, Long tareaId) throws EntityNotFoundException {
+        UsuarioMascotaTarea usr= repositorioDeUsuarioMascotaTarea.findByUserPetTask(usuarioId, mascotaId, tareaId);
+        repositorioDeUsuarioMascotaTarea.marcarCompletada(usr.getId());
+    }
 }

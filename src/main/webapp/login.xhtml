@@ -90,9 +90,10 @@
                 <p:inputText id="username"
                              value="#{autenticacionBean.nombreUsuario}"
                              placeholder="Usuario"
-                             required="true"
+                             required="true" requiredMessage="El nombre de Usuario es obligatorio"
                              label="Usuario"
                              styleClass="custom-input"/>
+
             </div>
 
             <!-- Contraseña -->
@@ -101,10 +102,11 @@
                 <p:password id="password"
                             value="#{autenticacionBean.clave}"
                             placeholder="Contraseña"
-                            required="true"
+                            required="true" requiredMessage="La contraseña es obligatoria"
                             label="Contraseña"
                             feedback="false"
                             styleClass="custom-input"/>
+
             </div>
 
             <!-- Botón ingresar -->

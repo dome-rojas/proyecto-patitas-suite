@@ -18,8 +18,9 @@ import java.util.Objects;
                 name = "Tarea.findAll",
                 query = "SELECT t FROM Tarea t"),
         @NamedQuery(
-                name = "Tarea.findPendientesPorMascota",
-                query = "SELECT t FROM Tarea t WHERE t.completada = false AND t.mascota.id = :mascotaId")
+                name = "Tarea.findByTipo",
+                query = "SELECT t FROM Tarea t WHERE t.tipo = :tipo"
+        )
 })
 public class Tarea implements Serializable {
     @Id
@@ -27,18 +28,11 @@ public class Tarea implements Serializable {
     private Long id;
     @ManyToOne
     @JoinColumn(name = "tipo_id")
-    @NotNull @NotEmpty
     private TipoDeTarea tipo;
-    @NotNull @NotEmpty @Column(name = "fecha_tarea")
-    private LocalDate fecha;
-    @NotNull @NotEmpty @Column(name = "hora_tarea")
-    private LocalTime hora;
-    @ManyToOne
-    @JoinColumn(name = "mascota_id")
-    private Mascota mascota;
-    @NotNull @NotEmpty @Column(name = "completada_tarea")
-    private boolean completada;
-
+    public Tarea() {}
+    public Tarea(TipoDeTarea tipo) {
+        this.tipo = tipo;
+    }
     public TipoDeTarea getTipo() {
         return tipo;
     }
@@ -59,47 +53,15 @@ public class Tarea implements Serializable {
         this.id = id;
     }
 
-    public LocalDate getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
-    }
-
-    public LocalTime getHora() {
-        return hora;
-    }
-
-    public void setHora(LocalTime hora) {
-        this.hora = hora;
-    }
-
-    public boolean isCompletada() {
-        return completada;
-    }
-
-    public void setCompletada(boolean completada) {
-        this.completada = completada;
-    }
-
-    public Mascota getMascota() {
-        return mascota;
-    }
-
-    public void setMascota(Mascota mascota) {
-        this.mascota = mascota;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Tarea tarea = (Tarea) o;
-        return Objects.equals(tipo, tarea.tipo) && Objects.equals(fecha, tarea.fecha) && Objects.equals(hora, tarea.hora) && Objects.equals(mascota, tarea.mascota);
+        return Objects.equals(tipo, tarea.tipo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(tipo, fecha, hora, mascota);
+        return Objects.hash(tipo);
     }
 }

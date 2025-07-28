@@ -1,9 +1,11 @@
 package edu.unl.cc.patitas_suite.negocios;
 
+import edu.unl.cc.patitas_suite.dominio.comun.UsuarioMascotaTarea;
 import edu.unl.cc.patitas_suite.dominio.seguridad.Tarea;
 import edu.unl.cc.patitas_suite.dominio.seguridad.TipoDeTarea;
 import edu.unl.cc.patitas_suite.excepciones.EntityNotFoundException;
 import edu.unl.cc.patitas_suite.negocios.servicios.RepositorioDeTareas;
+import edu.unl.cc.patitas_suite.negocios.servicios.RepositorioDeUsuarioMascotaTarea;
 import jakarta.ejb.Stateless;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -19,7 +21,9 @@ public class FachadaDeTareas implements Serializable {
     @Inject
     private RepositorioDeTareas repositorioDeTareas;
 
-    // 1. Crear nueva tarea
+    @Inject
+    private RepositorioDeUsuarioMascotaTarea repositorioDeUsuarioMascotaTarea;
+
     public Tarea crearTarea(Tarea tarea) throws Exception {
         return repositorioDeTareas.save(tarea);
     }
@@ -28,11 +32,6 @@ public class FachadaDeTareas implements Serializable {
         return repositorioDeTareas.save(tarea);
     }
 
-    public void marcarComoCompletada(Long tareaId) throws Exception {
-        Tarea tarea = repositorioDeTareas.find(tareaId);
-        tarea.setCompletada(true);
-        repositorioDeTareas.save(tarea);
-    }
 
     public Tarea buscarPorId(Long tareaId) throws EntityNotFoundException {
         return repositorioDeTareas.find(tareaId);
@@ -45,16 +44,20 @@ public class FachadaDeTareas implements Serializable {
     public List<Tarea> todasLasTareas() throws EntityNotFoundException {
         return repositorioDeTareas.allTareas();
     }
+
     public List<TipoDeTarea> obtenerTiposDeTarea() throws EntityNotFoundException {
         return repositorioDeTareas.allTiposDeTareas();
     }
+    public TipoDeTarea obtenerTipoDeTarea(String nombre) throws EntityNotFoundException {
+        return repositorioDeTareas.findTipoTarea(nombre);
+    }
 
-    public List<Tarea> pendientesDeMascota(Long mascotaId) {
-        return repositorioDeTareas.findPendientesPorMascota(mascotaId);
+    // Pendientes de mascota: ahora devuelve asignaciones, no tareas
+    public List<UsuarioMascotaTarea> pendientesDeMascota(Long mascotaId) {
+        return repositorioDeUsuarioMascotaTarea.findByMascota(mascotaId);
     }
 
     public List<Tarea> buscarPorNombreConFiltro(String nombre) throws EntityNotFoundException {
         return repositorioDeTareas.findWithLike(nombre);
     }
-
 }

@@ -10,10 +10,11 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@NamedQuery(
-        name = "Rol.findAll",
-        query = "SELECT r FROM Rol r"
-)
+@NamedQueries({
+        @NamedQuery(name = "Rol.findAll", query = "SELECT r FROM Rol r"),
+        @NamedQuery(name = "Rol.findByNombre", query = "SELECT r FROM Rol r WHERE LOWER(r.nombre) = :nombre")
+})
+
 public class Rol implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

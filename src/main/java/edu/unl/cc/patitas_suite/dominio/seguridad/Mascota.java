@@ -1,20 +1,21 @@
 package edu.unl.cc.patitas_suite.dominio.seguridad;
 
 import edu.unl.cc.patitas_suite.dominio.comun.Usuario;
+import edu.unl.cc.patitas_suite.dominio.comun.UsuarioMascotaTarea;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @NamedQueries({
     @NamedQuery(name = "Mascota.findByNombreAndPropietario",
                 query = "SELECT m FROM Mascota m WHERE LOWER(m.nombre) = :nombre AND m.propietario.id = :propietarioId"),
-    @NamedQuery(name = "Mascota.findByCuidador",
-                query = "SELECT m FROM Mascota m WHERE m.cuidador.id = :cuidadorId"),
         @NamedQuery(
                 name = "Mascota.findAll",
                 query = "SELECT m FROM Mascota m"
@@ -41,7 +42,6 @@ public class Mascota implements Serializable {
     @Enumerated(EnumType.STRING)
     private Complexion complexion;
 
-
     private LocalDate fechaNacimiento;
 
     @ManyToOne(optional = true)
@@ -52,13 +52,13 @@ public class Mascota implements Serializable {
     @JoinColumn(name = "habitacion_id")
     private Habitacion habitacion;
 
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private ExpedienteMedico expedienteMedico;
 
-    private EstadoMascota estado=EstadoMascota.SANO;
+    private EstadoMascota estado;
 
-    @ManyToOne
-    @JoinColumn(name = "cuidador_id")
-    private Usuario cuidador;
+    @OneToMany(mappedBy = "mascota", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UsuarioMascotaTarea> asignaciones = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "reserva_id")
@@ -66,6 +66,18 @@ public class Mascota implements Serializable {
 
     public Mascota() {
 
+    }
+
+    public void setPeso(Float peso) {
+        this.peso = peso;
+    }
+
+    public Set<UsuarioMascotaTarea> getAsignaciones() {
+        return asignaciones;
+    }
+
+    public void setAsignaciones(Set<UsuarioMascotaTarea> asignaciones) {
+        this.asignaciones = asignaciones;
     }
 
     private void validarRestriccionDeNombre(String text) throws IllegalArgumentException{
@@ -118,13 +130,6 @@ public class Mascota implements Serializable {
         this.reserva = reserva;
     }
 
-    public Usuario getCuidador() {
-        return cuidador;
-    }
-
-    public void setCuidador(Usuario cuidador) {
-        this.cuidador = cuidador;
-    }
     public Long getId() {
         return id;
     }

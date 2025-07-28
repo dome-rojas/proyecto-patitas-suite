@@ -22,10 +22,6 @@ import java.util.Set;
                 query = "SELECT u FROM Usuario u WHERE LOWER(u.rol.nombre) = :nombreRol"
         ),
         @NamedQuery(
-                name = "Usuario.findAllTareas",
-                query = "SELECT DISTINCT t FROM Usuario u JOIN u.tareasAsignadas t"
-        ),
-        @NamedQuery(
                 name = "Usuario.findAll",
                 query = "SELECT u FROM Usuario u"
         )
@@ -48,27 +44,30 @@ public class Usuario implements Serializable {
     @JoinColumn(name = "rol_id")
     private Rol rol;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "usuario_mascota",
-            joinColumns = @JoinColumn(name = "id_usuario"),
-            inverseJoinColumns = @JoinColumn(name = "id_mascota")
-    )
-    private Set<Mascota> mascotasAsignadas=new HashSet<>();
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UsuarioMascotaTarea> asignaciones = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "usuario_tareas",
-            joinColumns = @JoinColumn(name = "id_usuario"),
-            inverseJoinColumns = @JoinColumn(name = "id_tarea"))
-    private Set<Tarea> tareasAsignadas=new HashSet<>();
     private boolean primerIngreso;
+    private boolean activo=true;
 
-
-    public Set<Tarea> getTareasAsignadas() {
-        return tareasAsignadas;
+    public boolean isActivo() {
+        return activo;
     }
 
-    public void setTareasAsignadas(Set<Tarea> tareasAsignadas) {
-        this.tareasAsignadas = tareasAsignadas;
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
+
+    public Set<UsuarioMascotaTarea> getAsignaciones() {
+        return asignaciones;
+    }
+
+    public void setAsignaciones(Set<UsuarioMascotaTarea> asignaciones) {
+        this.asignaciones = asignaciones;
+    }
+
+    public boolean isPrimerIngreso() {
+        return primerIngreso;
     }
 
     public boolean esPrimerIngreso(){
@@ -79,12 +78,6 @@ public class Usuario implements Serializable {
         return id;
     }
 
-    public void addMascota(Mascota mascota) {
-        mascotasAsignadas.add(mascota);
-    }
-    public void addTarea(Tarea tarea) {
-        tareasAsignadas.add(tarea);
-    }
     public void setId(Long id) {
         this.id = id;
     }
@@ -134,11 +127,4 @@ public class Usuario implements Serializable {
         this.primerIngreso = primerIngreso;
     }
 
-    public Set<Mascota> getMascotasAsignadas() {
-        return mascotasAsignadas;
-    }
-
-    public void setMascotasAsignadas(Set<Mascota> mascotasAsignadas) {
-        this.mascotasAsignadas = mascotasAsignadas;
-    }
 }

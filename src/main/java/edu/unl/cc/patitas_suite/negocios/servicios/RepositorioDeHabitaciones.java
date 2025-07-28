@@ -41,20 +41,5 @@ public class RepositorioDeHabitaciones implements Serializable {
         return servicioCrud.findWithNamedQuery("Habitacion.findAll", new HashMap<>());
     }
 
-/*
-    public Habitacion find(@NotNull String nombre) throws EntityNotFoundException{
-        Map<String, Object> params = new HashMap<>();
-        params.put("nombre", nombre.toLowerCase());
-        Habitacion habitacionEncontrada = (Habitacion) servicioCrud.findSingleResultOrNullWithNamedQuery("Cliente.findLikeName", params);
-        if (habitacionEncontrada == null){
-            throw new EntityNotFoundException("Habitacion no encontrado con [" + nombre + "]");
-        }
-        return habitacionEncontrada;
-    }
 
-    public List<Cliente> findWithLike(@NotNull String nombre) throws EntityNotFoundException{
-        Map<String, Object> params = new HashMap<>();
-        params.put("nombre", nombre.toLowerCase() + "%");
-        return servicioCrud.findWithNamedQuery("Habitacion.findLikeName", params);
-    }*/
 }

@@ -36,6 +36,9 @@ public class FachadaDeCliente implements Serializable {
     public Cliente buscarPorNombre(String nombre) throws EntityNotFoundException {
         return repositorioDeClientes.find(nombre);
     }
+    public List<Cliente> obtenerTodos() {
+        return repositorioDeClientes.findAll();
+    }
 
     public List<Cliente> listarClientes(String filtroNombre) throws EntityNotFoundException {
         return repositorioDeClientes.findWithLike(filtroNombre);
