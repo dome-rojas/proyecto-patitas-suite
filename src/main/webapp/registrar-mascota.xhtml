@@ -110,6 +110,15 @@
                         <!-- Columna 1: Mascota -->
                         <div class="column-block" style="display: flex; flex-direction: column;">
                             <h3 class="section-title">Mascota</h3>
+                            <p:selectOneMenu id="mascotas" value="#{registrarMascotaBean.mascotaSeleccionadaID}"
+                                             requiredMessage="Seleccione mascota registrada" style="width: 100%;">
+                                <f:selectItem itemLabel="Seleccione una mascota" itemValue="#{null}" />
+                                <f:selectItems value="#{registrarMascotaBean.mascotas}" var="mas"
+                                               itemLabel="#{mas.nombre}" itemValue="#{mas.id}" />
+                                <p:ajax event="change" listener="#{registrarMascotaBean.cargarDatosMascota}"
+                                        update="nombre especie raza edad peso complexion" />
+                            </p:selectOneMenu>
+                            <p:message for="empleado" />
                             <h3>Nombre de la Mascota</h3>
                             <p:inputText id="nombre" value="#{registrarMascotaBean.nombreMascota}"
                                          placeholder="Nombre de la Mascota"
@@ -172,6 +181,14 @@
                         <!-- Columna 2: Cliente -->
                         <div class="column-block" style="display: flex; flex-direction: column;">
                             <h3 class="section-title">Cliente</h3>
+                            <p:selectOneMenu id="clientes" value="#{registrarMascotaBean.clienteSeleccionadaID}"
+                                             requiredMessage="Seleccione cliente registrado" style="width: 100%;">
+                                <f:selectItem itemLabel="Seleccione una cliente" itemValue="#{null}" />
+                                <f:selectItems value="#{registrarMascotaBean.propietarios}" var="cl"
+                                               itemLabel="#{cl.nombre}" itemValue="#{cl.id}" />
+                                <p:ajax event="change" listener="#{registrarMascotaBean.cargarDatosCliente()}"
+                                        update="clienteNombre telefono direccion" />
+                            </p:selectOneMenu>
                             <h3>Nombre</h3>
                             <p:inputText id="clienteNombre" value="#{registrarMascotaBean.nombreCliente}"
                                          placeholder="Jessenia Fuentes"
@@ -187,6 +204,16 @@
                                              placeholder="Dirección (Ej. Calle 123, ciudad)"
                                              required="true" requiredMessage="Dirección requerida" style="width: 100%;" />
                             <p:message for="direccion" />
+                            <h3>Opciones de Servicios</h3>
+                            <p:selectManyCheckbox id="opcionesServicios"
+                                                  value="#{registrarMascotaBean.seleccionCheckbox}"
+                                                  layout="pageDirection" columns="2" style="width:100%">
+
+                                <f:selectItems value="#{registrarMascotaBean.opcionesCheckbox}" />
+
+                            </p:selectManyCheckbox>
+
+                            <p:message for="opcionesServicios" />
                         </div>
                     </div>
 

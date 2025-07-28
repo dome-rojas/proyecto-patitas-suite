@@ -1,33 +1,39 @@
 package edu.unl.cc.patitas_suite.dominio.seguridad;
 
 import jakarta.persistence.*;
-
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@NamedQueries({
+        @NamedQuery(name="ExpedienteMedico.findByMascota", query="SELECT e FROM ExpedienteMedico e WHERE e.mascota.id = :mascotaId")
+})
 
 public class ExpedienteMedico implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private String infoMedica;
-    private String tratamientosActivos;
+    // Información inicial al ingreso; puede ser nulo si no hay datos iniciales
+    @Lob
+    private String infoInicialIngreso;
 
-    private List<RegistroSalud> registrosSalud;
+    @OneToMany(mappedBy = "expedienteMedico", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AnotacionMedica> anotaciones = new ArrayList<>();
 
-    public String getTratamientosActivos() {
-        return tratamientosActivos;
-    }
+    @OneToOne(mappedBy = "expedienteMedico")
+    private Mascota mascota;
 
-    public void setTratamientosActivos(String tratamientosActivos) {
-        this.tratamientosActivos = tratamientosActivos;
-    }
+    // Getters/setters
+    public Long getId() { return id; }
 
-    public List<RegistroSalud> getRegistrosSalud() {
-        return registrosSalud;
-    }
+    public String getInfoInicialIngreso() { return infoInicialIngreso; }
+    public void setInfoInicialIngreso(String infoInicialIngreso) { this.infoInicialIngreso = infoInicialIngreso; }
 
-    public void setRegistrosSalud(List<RegistroSalud> registrosSalud) {
-        this.registrosSalud = registrosSalud;
-    }
+    public List<AnotacionMedica> getAnotaciones() { return anotaciones; }
+    public void setAnotaciones(List<AnotacionMedica> anotaciones) { this.anotaciones = anotaciones; }
 
+    public Mascota getMascota() { return mascota; }
+    public void setMascota(Mascota mascota) { this.mascota = mascota; }
 }

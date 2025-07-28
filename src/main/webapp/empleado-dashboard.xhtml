@@ -194,6 +194,7 @@
 <h:body>
     <h:form>
         <div class="dashboard-card">
+            <p:growl id="growl" showDetail="true" autoUpdate="false" widgetVar="growlWidget" />
 
             <!-- Encabezado -->
             <div class="header">
@@ -299,7 +300,7 @@
                          widgetVar="tareasTable">
 
                 <p:column headerText="Tarea">
-                    <h:outputText value="#{tarea.tipo.nombre}" />
+                    <h:outputText value="#{tarea.tarea.tipo.nombre}" />
                 </p:column>
 
                 <p:column headerText="Mascota">
@@ -310,17 +311,20 @@
                     <h:outputText value="#{tarea.completada}" />
                 </p:column>
 
-                <p:column headerText="Acciones" exportable="false">
-                    <p:commandButton icon="pi pi-check"
-                                     action="#{empleadoBean.marcarComoCompletado(tarea)}"
-                                     title="Marcar como completada"
-                                     styleClass="ui-button-flat ui-button-success" />
+                    <p:column headerText="Acciones" exportable="false">
+                        <p:commandButton icon="pi pi-check"
+                                         action="#{empleadoBean.marcarComoCompletado(tarea)}"
+                                         update="@form"
+                                         title="Marcar como completada"
+                                         styleClass="ui-button-flat ui-button-success" />
 
-                    <p:commandButton icon="pi pi-eye"
-                                     action="#{empleadoBean.marcarDetalleTarea(tarea)}"
-                                     title="Ver detalle"
-                                     styleClass="ui-button-flat ui-button-info" />
-                </p:column>
+                        <p:commandButton icon="pi pi-eye"
+                                         action="#{empleadoBean.marcarDetalleTarea(tarea)}"
+                                         oncomplete="PF('growlWidget').show()"
+                                        update="growl"
+                                        title="Ver detalle"
+                                        styleClass="ui-button-flat ui-button-info" />
+                    </p:column>
             </p:dataTable>
             </div>
 

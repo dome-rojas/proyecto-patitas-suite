@@ -2,16 +2,11 @@ package edu.unl.cc.patitas_suite.controladores;
 
 import edu.unl.cc.patitas_suite.controladores.seguridad.SesionDeUsuario;
 import edu.unl.cc.patitas_suite.dominio.comun.Usuario;
-import edu.unl.cc.patitas_suite.dominio.seguridad.Cliente;
-import edu.unl.cc.patitas_suite.dominio.seguridad.Complexion;
-import edu.unl.cc.patitas_suite.dominio.seguridad.Habitacion;
-import edu.unl.cc.patitas_suite.dominio.seguridad.Mascota;
+import edu.unl.cc.patitas_suite.dominio.comun.UsuarioMascotaTarea;
+import edu.unl.cc.patitas_suite.dominio.seguridad.*;
 import edu.unl.cc.patitas_suite.excepciones.EntityNotFoundException;
 import edu.unl.cc.patitas_suite.faces.FacesUtil;
-import edu.unl.cc.patitas_suite.negocios.FachadaDeCliente;
-import edu.unl.cc.patitas_suite.negocios.FachadaDeEmpleado;
-import edu.unl.cc.patitas_suite.negocios.FachadaDeHabitacion;
-import edu.unl.cc.patitas_suite.negocios.FachadaDeMascota;
+import edu.unl.cc.patitas_suite.negocios.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
@@ -21,7 +16,9 @@ import jakarta.inject.Named;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -31,6 +28,10 @@ public class RegistrarMascotaBean implements Serializable {
     private static Logger logger = Logger.getLogger(AutenticacionBean.class.getName());
 
     // --- Datos de la mascota ---
+    private Long mascotaSeleccionadaID;
+    private Mascota mascotaSeleccionada;
+    private Long clienteSeleccionadaID;
+    private Cliente clienteSeleccionado;
     private String nombreMascota;
     private String especie;
     private LocalDate edad;
@@ -38,13 +39,17 @@ public class RegistrarMascotaBean implements Serializable {
     private Long habitacionSeleccionadaID;
     private String habitacion;
     private Long empleadoAsignadoID;
-
+    private List<Mascota> mascotas;
+    private List<Cliente> propietarios;
     // --- Datos del cliente ---
     private String nombreCliente;
     private String telefono;
     private String direccion;
     private String metodoPago;
 
+    private List<String> opcionesCheckbox; // Lista que alimenta los checkboxes
+
+    private List<String> seleccionCheckbox;
     @Inject
     private FachadaDeCliente fachadaCliente;
 
@@ -58,7 +63,13 @@ public class RegistrarMascotaBean implements Serializable {
     private SesionDeUsuario sesionDeUsuario;
 
     @Inject
+    private FachadaUsuarioMascotaTarea usrmsF;
+
+    @Inject
     private FachadaDeHabitacion fachadaHabitacion;
+    @Inject
+    private FachadaDeTareas fachadaTarea;
+
     private Usuario usuario;
     private String raza;
     private Complexion complexion;
@@ -68,80 +79,234 @@ public class RegistrarMascotaBean implements Serializable {
                 .getExternalContext()
                 .getSessionMap()
                 .get("usuario");
-
+        opcionesCheckbox = cargarOpcionesDinamicas();
         if (value != null && value instanceof Usuario usuarioSesion) {
             this.usuario = usuarioSesion;
         } else {
             System.err.println("‼ Usuario no encontrado en sesión");
         }
     }
+
+
     public List<Complexion> getListaComplexiones() {
         return Arrays.asList(Complexion.values());
     }
 
+    public List<String> cargarOpcionesDinamicas() {
+        try {
+            List<TipoDeTarea> tipos = fachadaTarea.obtenerTiposDeTarea();
+            // Mapear la lista de TipoDeTarea a lista de Strings con sus nombres
+            return tipos.stream()
+                    .map(TipoDeTarea::getNombre)
+                    .toList();
+        } catch (EntityNotFoundException e) {
+            throw new RuntimeException("Error al cargar tipos de tarea", e);
+        }
+    }
+    public void cargarDatosCliente(){
+        if(clienteSeleccionadaID!=null){
+            try{
+                clienteSeleccionado=fachadaCliente.buscarPorId(clienteSeleccionadaID);
+                if(clienteSeleccionado!=null){
+                    nombreCliente=clienteSeleccionado.getNombre();
+                    telefono=clienteSeleccionado.getContacto();
+                    direccion=clienteSeleccionado.getDireccion();
+                }
+            }catch (EntityNotFoundException e) {
+                FacesUtil.addErrorMessage("Cliente no encontrada", e.getMessage());
+            }
+        }
+    }
+    public void cargarDatosMascota() {
+        if (mascotaSeleccionadaID != null) {
+            try {
+                mascotaSeleccionada = fachadaMascota.buscarPorId(mascotaSeleccionadaID);
+                if (mascotaSeleccionada != null) {
+                    // Rellena todos los campos para mostrar en los inputs
+                    nombreMascota = mascotaSeleccionada.getNombre();
+                    especie = mascotaSeleccionada.getEspecie();
+                    raza = mascotaSeleccionada.getRaza();
+                    edad = mascotaSeleccionada.getFechaNacimiento();
+                    peso = mascotaSeleccionada.getPeso();
+                    complexion = mascotaSeleccionada.getComplexion();
+                }
+            } catch (EntityNotFoundException e) {
+                FacesUtil.addErrorMessage("Mascota no encontrada", e.getMessage());
+            }
+        }
+    }
+
 
     public String registrarMascota() {
-
         if (usuario == null) {
-            // Refuerzo en caso el PostConstruct no haya funcionado
-            this.usuario = sesionDeUsuario.getUsuario();
+            Object value = FacesContext.getCurrentInstance()
+                    .getExternalContext()
+                    .getSessionMap()
+                    .get("usuario");
+            if (value != null && value instanceof Usuario usuarioSesion) {
+                usuario = usuarioSesion;
+            }
             if (usuario == null) {
-                FacesUtil.addErrorMessage("Sesión perdida", "Por favor inicia sesión nuevamente.");
+                FacesUtil.addErrorMessage("Sesión perdida", "Por favor, inicia sesión nuevamente.");
                 return "/login.xhtml?faces-redirect=true";
             }
         }
-        try {
-            this.peso=12.5f;
-            System.out.println("DEBUG peso: " + peso);
 
+        try {
+            // Refuerza por si la sesión no tenía usuario
             if (usuario == null) {
-                // Apenas por seguridad si el bean se perdió
-                usuario = (Usuario) FacesContext.getCurrentInstance()
-                        .getExternalContext().getSessionMap().get("usuario");
+                usuario = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
             }
 
-            Cliente cliente = new Cliente();
-            cliente.setNombre(nombreCliente);
-            cliente.setContacto(telefono);
-            cliente.setDireccion(direccion);
+            // *** CLIENTE ***
+            Cliente cliente = fachadaCliente.buscarPorId(clienteSeleccionadaID);
+            if (cliente == null) {
+                cliente = new Cliente();
+                cliente.setNombre(nombreCliente);
+                cliente.setContacto(telefono);
+                cliente.setDireccion(direccion);
+                fachadaCliente.guardar(cliente);
+            }
 
-            fachadaCliente.guardar(cliente);
+            // *** MASCOTA ***
+            Mascota mascota;
+            if (mascotaSeleccionadaID != null) {
+                try {
+                    mascota = fachadaMascota.buscarPorId(mascotaSeleccionadaID);
+                    // Actualiza datos
+                    mascota.setNombre(nombreMascota);
+                    mascota.setEspecie(especie);
+                    mascota.setFechaNacimiento(edad);
+                    mascota.setPeso(peso);
+                    mascota.setRaza(raza);
+                    mascota.setComplexion(complexion);
+                    mascota.setHabitacion(fachadaHabitacion.buscarPorId(habitacionSeleccionadaID));
+                    mascota.setPropietario(cliente);
+                    mascota = fachadaMascota.crearOActualizarMascota(mascota); // método para update o create
+                } catch (EntityNotFoundException e) {
+                    // No existe mascota, la creamos abajo
+                    mascota = null;
+                }
+            } else {
+                mascota = null;
+            }
 
-            Mascota mascota = new Mascota();
-            mascota.setNombre(nombreMascota);
-            mascota.setEspecie(especie);
-            mascota.setFechaNacimiento(edad);
-            mascota.setPeso(peso); // Ya está validado
-            mascota.setRaza(raza);
-            mascota.setComplexion(complexion);
-            mascota.setHabitacion(fachadaHabitacion.buscarPorId(habitacionSeleccionadaID));
-            mascota.setCuidador(fachadaEmpleado.obtenerEmpleado(empleadoAsignadoID));
-            mascota.setPropietario(cliente);
+            if (mascota == null) {
+                mascota = new Mascota();
+                mascota.setNombre(nombreMascota);
+                mascota.setEspecie(especie);
+                mascota.setFechaNacimiento(edad);
+                mascota.setPeso(peso);
+                mascota.setRaza(raza);
+                mascota.setComplexion(complexion);
+                mascota.setHabitacion(fachadaHabitacion.buscarPorId(habitacionSeleccionadaID));
+                mascota.getHabitacion().setEstado(EstadoHabitacion.OCUPADA);
+                mascota.setPropietario(cliente);
+                mascota = fachadaMascota.crearOActualizarMascota(mascota);
+            }
 
-            Mascota mascotaGuardada = fachadaMascota.create(mascota);
-            System.out.println("Mascota creada: ID = " + mascotaGuardada.getId());
+            // *** ASIGNACIONES DE TAREAS ***
+            if (usuario.getAsignaciones() == null) {
+                usuario.setAsignaciones(new HashSet<>());
+            }
 
-            fachadaEmpleado.asignarMascotaAEmpleado(mascotaGuardada.getId(), empleadoAsignadoID);
+            for(String tareaNombre : seleccionCheckbox) {
+                TipoDeTarea tipo = fachadaTarea.obtenerTipoDeTarea(tareaNombre);
+                Tarea tareaNueva = new Tarea();
+                tareaNueva.setTipo(tipo);
+                // Persistir la tarea ANTES de la asignación
+                tareaNueva = fachadaTarea.crearTarea(tareaNueva);
 
-            FacesUtil.addSuccessMessageAndKeep("Registro exitoso", "Mascota registrada correctamente.");
+                // Crear asignación
+                UsuarioMascotaTarea asignacion = new UsuarioMascotaTarea();
+                asignacion.setTarea(tareaNueva);
+                asignacion.setUsuario(usuario);
+                asignacion.setMascota(mascota);
+                asignacion.setFechaAsignacion(LocalDate.now());
+                asignacion.setHora(LocalTime.now());
+                asignacion.setCompletada(false);
+
+                asignacion = usrmsF.saveAsignacion(asignacion);
+                usuario.getAsignaciones().add(asignacion);
+            }
+            fachadaEmpleado.guardarEmpleado(usuario);
+
+            FacesUtil.addSuccessMessage("Registro exitoso", "Mascota y asignaciones registradas correctamente.");
 
             limpiarFormulario();
 
             return usuario.getRol().getNombre().toLowerCase() + "-dashboard.xhtml?faces-redirect=true";
 
         } catch (Exception e) {
-            e.printStackTrace();
             FacesUtil.addErrorMessage("Error", e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }
 
+
+    public List<String> getOpcionesCheckbox() {
+        return opcionesCheckbox;
+    }
+
+    public Long getClienteSeleccionadaID() {
+        return clienteSeleccionadaID;
+    }
+
+    public void setClienteSeleccionadaID(Long clienteSeleccionadaID) {
+        this.clienteSeleccionadaID = clienteSeleccionadaID;
+    }
+
+    public Cliente getClienteSeleccionado() {
+        return clienteSeleccionado;
+    }
+
+    public void setClienteSeleccionado(Cliente clienteSeleccionado) {
+        this.clienteSeleccionado = clienteSeleccionado;
+    }
+
+    public void setOpcionesCheckbox(List<String> opcionesCheckbox) {
+        this.opcionesCheckbox = opcionesCheckbox;
+    }
+
+    public List<String> getSeleccionCheckbox() {
+        return seleccionCheckbox;
+    }
+
+    public void setSeleccionCheckbox(List<String> seleccionCheckbox) {
+        this.seleccionCheckbox = seleccionCheckbox;
+    }
     public List<Habitacion> obtenerHabitacionesDisponibles(){
         return fachadaHabitacion.habitacionesDisponibles();
     }
     public List<Usuario> obtenerEmpleados(){
         return fachadaEmpleado.obtenerTodosLosEmpleados();
     }
+
+    public Mascota getMascotaSeleccionada() {
+        return mascotaSeleccionada;
+    }
+
+    public void setMascotaSeleccionada(Mascota mascotaSeleccionada) {
+        this.mascotaSeleccionada = mascotaSeleccionada;
+    }
+
+    public List<Mascota> getMascotas() {
+        return fachadaMascota.obtenerTodas();
+    }
+
+    public void setMascotas(List<Mascota> mascotas) {
+        this.mascotas = mascotas;
+    }
+
+    public List<Cliente> getPropietarios() {
+        return fachadaCliente.obtenerTodos();
+    }
+
+    public void setPropietarios(List<Cliente> propietarios) {
+        this.propietarios = propietarios;
+    }
+
     public void limpiarFormulario() {
         nombreMascota = null;
         especie = null;
@@ -236,6 +401,14 @@ public class RegistrarMascotaBean implements Serializable {
 
     public String getDireccion() { return direccion; }
     public void setDireccion(String direccion) { this.direccion = direccion; }
+
+    public Long getMascotaSeleccionadaID() {
+        return mascotaSeleccionadaID;
+    }
+
+    public void setMascotaSeleccionadaID(Long mascotaSeleccionadaID) {
+        this.mascotaSeleccionadaID = mascotaSeleccionadaID;
+    }
 
     public String getMetodoPago() { return metodoPago; }
     public void setMetodoPago(String metodoPago) { this.metodoPago = metodoPago; }

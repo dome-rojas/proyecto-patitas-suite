@@ -13,6 +13,10 @@ import java.util.List;
         @NamedQuery(
                 name = "Cliente.findLikeName",
                 query = "SELECT c FROM Cliente c WHERE LOWER(c.nombre) LIKE :nombre"
+        ),
+        @NamedQuery(
+                name = "Cliente.findAll",
+                query = "SELECT c FROM Cliente c"
         )
 })
 public class Cliente implements Serializable {

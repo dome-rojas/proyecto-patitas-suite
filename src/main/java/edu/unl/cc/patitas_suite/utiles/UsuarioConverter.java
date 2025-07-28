@@ -22,7 +22,7 @@ public class UsuarioConverter implements Converter<Usuario> {
     public Usuario getAsObject(FacesContext context, UIComponent component, String value) {
         try{
             if (value == null || value.isEmpty()) return null;
-            return fachada.obtenerEmpleado(Long.parseLong(value));
+            return fachada.obtenerEmpleadoPorId(Long.parseLong(value));
         } catch (EntityNotFoundException e) {
             throw new RuntimeException(e);
         }

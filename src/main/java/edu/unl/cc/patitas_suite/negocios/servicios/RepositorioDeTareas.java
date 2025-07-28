@@ -83,18 +83,16 @@ public class RepositorioDeTareas implements Serializable {
         return servicioCrud.findWithNamedQuery("Tarea.findLikeName", params);
     }
 
-    public List<Tarea> findPendientesPorMascota(Long mascotaId) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("mascotaId", mascotaId);
-        return servicioCrud.findWithNamedQuery("Tarea.findPendientesPorMascota", params);
-    }
-
     public List<Tarea> allTareas() throws EntityNotFoundException {
         return servicioCrud.findWithNamedQuery("Tarea.findAll", new HashMap<>());
     }
 
     public List<TipoDeTarea> allTiposDeTareas() throws EntityNotFoundException {
         return servicioCrud.findWithNamedQuery("TipoDeTarea.findAll", new HashMap<>());
+    }
+    public Tarea findByTipo(TipoDeTarea tipo) {
+        Map<String,Object> params = Map.of("tipo", tipo);
+        return servicioCrud.findSingleResultOrNullWithNamedQuery("Tarea.findByTipo", params);
     }
 
 }

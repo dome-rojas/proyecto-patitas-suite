@@ -4,6 +4,7 @@ import edu.unl.cc.patitas_suite.controladores.seguridad.SesionDeUsuario;
 import edu.unl.cc.patitas_suite.controladores.seguridad.UsuarioPrincipal;
 import edu.unl.cc.patitas_suite.dominio.comun.Usuario;
 import edu.unl.cc.patitas_suite.faces.FacesUtil;
+import edu.unl.cc.patitas_suite.negocios.FachadaDeHabitacion;
 import edu.unl.cc.patitas_suite.negocios.FachadaDeSeguridad;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.faces.application.FacesMessage;
@@ -33,10 +34,15 @@ public class AutenticacionBean implements Serializable {
 
     @Inject
     private SesionDeUsuario sesionDeUsuario;
+    @Inject
+    private FachadaDeHabitacion fachadaDeHabitacion;
 
     //@Inject
     //private FacesContext facesContext;
 
+    public int getTodasHabitaciones(){
+       return fachadaDeHabitacion.habitacionesDisponibles().size();
+    }
 
     public String login(){
         logger.info("Logging in with username: " + nombreUsuario);
@@ -51,6 +57,7 @@ public class AutenticacionBean implements Serializable {
             //FacesMessage fc = new FacesMessage(FacesMessage.SEVERITY_INFO, "Bienvenido", "Bienvenido " + user.getName() + " a la aplicación Jbrew.");
             //facesContext.addMessage(null, fc);
             //facesContext.getExternalContext().getFlash().setKeepMessages(true);
+            logger.info("Algo pasó ");
             logger.info("Logging in with password: " + usuario.getRol().getNombre());
             System.out.println("--------------> userSession Login: " + sesionDeUsuario.getUsuario());
             sesionDeUsuario.postLogin(usuario);

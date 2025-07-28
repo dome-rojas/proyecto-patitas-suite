@@ -2,6 +2,7 @@ package edu.unl.cc.patitas_suite.negocios.servicios;
 
 import edu.unl.cc.patitas_suite.dominio.comun.Usuario;
 import edu.unl.cc.patitas_suite.dominio.seguridad.Cliente;
+import edu.unl.cc.patitas_suite.dominio.seguridad.Mascota;
 import edu.unl.cc.patitas_suite.excepciones.EntityNotFoundException;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
@@ -54,4 +55,9 @@ public class RepositorioDeClientes implements Serializable {
         params.put("nombre", nombre.toLowerCase() + "%");
         return servicioCrud.findWithNamedQuery("Cliente.findLikeName", params);
     }
+
+    public List<Cliente> findAll() {
+        return servicioCrud.findWithNamedQuery("Cliente.findAll", new HashMap<>());
+    }
+
 }

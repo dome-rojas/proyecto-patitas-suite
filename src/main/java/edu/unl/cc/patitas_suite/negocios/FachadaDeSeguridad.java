@@ -1,5 +1,6 @@
 package edu.unl.cc.patitas_suite.negocios;
 
+import edu.unl.cc.patitas_suite.controladores.AutenticacionBean;
 import edu.unl.cc.patitas_suite.dominio.comun.Usuario;
 import edu.unl.cc.patitas_suite.dominio.seguridad.Rol;
 import edu.unl.cc.patitas_suite.excepciones.CredentialInvalidException;
@@ -14,18 +15,19 @@ import jakarta.inject.Inject;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 @Stateless
 public class FachadaDeSeguridad implements Serializable {
-
+    private static Logger logger = Logger.getLogger(AutenticacionBean.class.getName());
     @Inject
     private RepositorioDeUsuarios repositorioDeUsuarios;
 
     @Inject
     private RepositorioDeRoles repositorioDeRoles;
 
-    public Rol createRol(Rol rol)  {
-            repositorioDeRoles.find(rol.getNombre());
+    public Rol createRol(Rol rol) throws EntityNotFoundException {
+            repositorioDeRoles.findByNombre(rol.getNombre());
             Rol rolPersisted = repositorioDeRoles.save(rol);
             return rolPersisted;
     }
@@ -70,19 +72,21 @@ public class FachadaDeSeguridad implements Serializable {
         return repositorioDeUsuarios.save(usuario);
     }
     public List<Rol> findAllRoles() throws EntityNotFoundException {
-        return  repositorioDeRoles.allRoles();
+        return  repositorioDeRoles.findAll();
     }
 
     public Usuario find(Long id) throws EntityNotFoundException {
         return repositorioDeUsuarios.find(id);
     }
     public Rol findRolId(Long id) throws EntityNotFoundException {
-        return repositorioDeRoles.findRolId(id);
+        return repositorioDeRoles.findById(id);
     }
 
     public Usuario authenticate(String nombre, String clave) throws CredentialInvalidException, EncryptorException {
         try{
+            logger.info("entro aca ");
             Usuario userFound = repositorioDeUsuarios.find(nombre);
+            logger.info("No en tro aca ");
             String pwdEncrypted = GestorDeCifrado.encrypt(clave);
             System.out.println("---> OOOOO: " + pwdEncrypted + " " + userFound.getClave() + " " + pwdEncrypted.equals(userFound.getClave()));
             if (pwdEncrypted.equals(userFound.getClave())){
@@ -99,16 +103,6 @@ public class FachadaDeSeguridad implements Serializable {
     }
     public List<Usuario> findUsers() throws EntityNotFoundException {
         return repositorioDeUsuarios.findAllUsuarios();
-    }
-
-    public Set<Rol> findAllRolesWithPermission()  {
-        return repositorioDeRoles.findAllWithPermissions();
-    }
-
-    public Rol findRolesWithPermission(Long userId) throws EntityNotFoundException {
-        Usuario usuario = repositorioDeUsuarios.find(userId);
-        Rol r = repositorioDeRoles.find("ADMINISTRADOR");
-        return r;
     }
 
 }
